@@ -6,13 +6,14 @@
 
 本课程包含多个图技术方面的内容：
 
-- MiniGU
-- TuGraph-DB
-- Graph+AI技术
+- MiniGU图数据库实验系列
+- TuGraph-DB系列
+- Apache GeaFlow系列
+- Graph+AI技术系列
 
 ## 课程内容
 
-### MiniGU 图数据库系列
+### MiniGU 图数据库实验系列
 
 MiniGU 是一个使用 Rust 语言实现的轻量级嵌入式图数据库，专为图数据库入门学习设计。通过学习 MiniGU，你将掌握图数据库的核心概念与基本原理，学习使用 Rust 语言进行系统级开发、理解图数据存储，查询与计算的实现机制，通过动手实践深入了解图数据库的内部工作原理。
 
@@ -25,13 +26,30 @@ MiniGU 是一个使用 Rust 语言实现的轻量级嵌入式图数据库，专�
 
 ### TuGraph-DB 系列
 
-TODO
+基于工业级图数据库 TuGraph 的实践课程，学习企业级图数据库的使用与应用开发。TuGraph 是由蚂蚁集团与清华大学联合研发的高性能图数据库，在金融风控、工业制造、智慧城市等领域有广泛应用。
+
+- **[TuGraph 完整介绍](tugraph/tugraph.md)** - 全面了解 TuGraph 的架构、特性与应用场景
+- 其他内容敬请期待
 
 <!-- 基于工业级图数据库 TuGraph 的实践项目，包含多个图数据挖掘任务：
 - **Phase 1**: TuGraph 环境搭建与 Python API 使用
 - **Phase 2**: 使用 Louvain 算法实现社区检测
 - **Phase 3**: 使用 Node2Vec 算法实现链路预测
 -->
+
+### Apache Geaflow 系列
+
+Apache GeaFlow 是蚂蚁集团开源的性能世界一流的 OLAP 图数据库，支持万亿级图存储、图表混合处理、实时图计算、交互式图分析等核心能力。通过学习 GeaFlow，你将理解流图计算的核心原理，掌握实时图计算的应用场景。
+
+- **[GeaFlow 完整介绍](geaflow/geaflow.md)** - 全面了解 GeaFlow 的架构、特性与应用场景
+- 其他内容敬请期待
+
+### Graph+AI 技术系列
+
+探索图计算与人工智能的深度融合，通过「图智互融」技术实现图数据库的智能化。
+
+- **[Chat2Graph](graphai/chat2graph.md)** - 图原生智能体系统，实现与图对话
+- 其他内容敬请期待
 
 ### 关于
 

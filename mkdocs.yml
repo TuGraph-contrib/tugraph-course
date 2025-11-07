@@ -21,9 +21,11 @@ nav:
       - Lab 2 - 图查询实验: minigu/labs/lab2.md
     - 附录: minigu/appendix.md
   - TuGraph-DB:
-    - 项目介绍: tugraph/introduction.md
+    - TuGraph介绍: tugraph/tugraph.md
+  - Geaflow:
+    - GeaFlow 完整介绍: geaflow/geaflow.md
   - Graph+AI:
-    - 项目介绍: graphai/introduction.md
+    - Chat2Graph介绍: graphai/chat2graph.md
   - 关于: 
     - Roadmap: about/roadmap.md
     - 贡献指南: about/contributing.md
