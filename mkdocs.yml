@@ -3,26 +3,34 @@ site_url: https://tugraph-contrib.github.io/tugraph-course
 repo_url: https://github.com/TuGraph-contrib/tugraph-course
 repo_name: TuGraph-contrib/tugraph-course
 edit_uri: edit/dev/docs/
-docs_dir: .
-site_dir: ../site
+docs_dir: docs/
+site_dir: site
 copyright: Copyright © 2025 TuGraph
 # plugins:
 #   - search
 #   - git-authors
 nav:
   - 首页: index.md
-  - MiniGU 图数据库:
-    - 项目介绍: docs/introduction.md
-    - 快速上手: docs/quick-start.md
-    - 设计文档: docs/design.md
-    - Rust 语言基础: docs/rust.md
+  - MiniGU:
+    - 项目介绍: minigu/introduction.md
+    - 快速上手: minigu/quick-start.md
+    - 设计文档: minigu/design.md
+    - Rust 语言基础: minigu/rust.md
     - 实验指南:
-      - docs/labs/index.md
-      - Lab 0 - 环境搭建: docs/labs/lab0.md
-      - Lab 1 - 基础查询: docs/labs/lab1.md
-      - Lab 2 - 高级特性: docs/labs/lab2.md
-    - 开发路线图: docs/roadmap.md
-    - 附录: docs/appendix.md
+      - minigu/labs/index.md
+      - Lab 0 - 环境搭建: minigu/labs/lab0.md
+      - Lab 1 - 基础查询: minigu/labs/lab1.md
+      - Lab 2 - 高级特性: minigu/labs/lab2.md
+    - 开发路线图: minigu/roadmap.md
+    - 附录: minigu/appendix.md
+  - TuGraph-DB:
+    - 项目介绍: tugraph/introduction.md
+  - Graph+AI:
+    - 项目介绍： graphai/introduction.md
+  - 关于: 
+    - Roadmap: about/roadmap.md
+    - 贡献指南: about/contributing.md
+
 
 # theme:
 #   name: material
