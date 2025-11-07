@@ -1,4 +1,4 @@
-site_name: TuGraph Course
+site_name: TuGraph课程
 site_url: https://tugraph-contrib.github.io/tugraph-course
 repo_url: https://github.com/TuGraph-contrib/tugraph-course
 repo_name: TuGraph-contrib/tugraph-course
@@ -6,9 +6,8 @@ edit_uri: edit/dev/docs/
 docs_dir: docs/
 site_dir: site
 copyright: Copyright © 2025 TuGraph
-# plugins:
-#   - search
-#   - git-authors
+plugins:
+  - search
 nav:
   - 首页: index.md
   - MiniGU:
@@ -32,70 +31,64 @@ nav:
     - 贡献指南: about/contributing.md
 
 
-# theme:
-#   name: material
-#   custom_dir: overrides
-#   language: zh
-#   features:
-#     - search.highlight
-#     - navigation.sections
-#     - navigation.path
-#     - navigation.top
-#     - navigation.instant
-#     - navigation.tracking
-#     - navigation.tabs
-#     - navigation.tabs.sticky
-#     - navigation.footer
-#     - toc.follow
-#     - content.code.copy
-#     - content.action.edit
-#   logo: assets/logo.png
-#   favicon: assets/favicon.ico
-#   icon:
-#     repo: fontawesome/brands/github
-#   palette:
+theme:
+  name: material
+  # custom_dir: overrides
+  language: zh
+  features:
+    - search.highlight
+    - navigation.sections
+    - navigation.path
+    - navigation.top
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.footer
+    - toc.follow
+    - content.code.copy
+    - content.action.edit
+  logo: assets/white-logo.jpg
+  # favicon: assets/white-logo.jpg
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
 
-#     # Palette toggle for automatic mode
-#     - media: "(prefers-color-scheme)"
-#       toggle:
-#         icon: material/brightness-auto
-#         name: Switch to light mode
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 
-#     # Palette toggle for light mode
-#     - media: "(prefers-color-scheme: light)"
-#       scheme: default 
-#       toggle:
-#         icon: material/brightness-7
-#         name: Switch to dark mode
+extra_css:
+  - assets/extra.css
 
-#     # Palette toggle for dark mode
-#     - media: "(prefers-color-scheme: dark)"
-#       scheme: slate
-#       toggle:
-#         icon: material/brightness-4
-#         name: Switch to system preference
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/TuGraph-contrib/tugraph-course
+    - icon: fontawesome/solid/globe
+      link: https://tugraph.tech
 
-# extra:
-#   social:
-#     - icon: fontawesome/brands/github
-#       link: https://github.com/TuGraph-contrib/tugraph-course
-#     - icon: fontawesome/solid/globe
-#       link: https://tugraph.tech
-
-# markdown_extensions:
-#   - pymdownx.highlight:
-#       anchor_linenums: true
-#   - pymdownx.inlinehilite
-#   - pymdownx.snippets
-#   - pymdownx.superfences
-#   - toc:
-#       permalink: true
-#   - pymdownx.arithmatex:
-#       generic: true
-#       block_tag: 'pre'
-
-# extra_javascript:
-#     - ./assets/mathjax.js
-#     # - https://polyfill.io/v3/polyfill.min.js?features=es6
-#     - https://polyfill.alicdn.com/v3/polyfill.min.js?features=es6
-#     - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+      block_tag: 'pre'

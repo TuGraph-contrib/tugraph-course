@@ -1,0 +1,30 @@
+/* Custom primary color RGB(22, 118, 254) = #1676FE for TuGraph Course */
+
+/* Override Material primary color for both light and dark modes */
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: #1676FE;
+  --md-primary-fg-color--light: #4892FF;
+  --md-primary-fg-color--dark: #0D5DD1;
+  --md-primary-bg-color: #FFFFFF;
+  --md-primary-bg-color--light: #F5F5F5;
+}
+
+/* Header background color */
+.md-header {
+  background-color: #1676FE !important;
+}
+
+/* Tab navigation background */
+.md-tabs {
+  background-color: #1676FE !important;
+}
+
+/* Links and primary accents */
+.md-typeset a {
+  color: #1676FE;
+}
+
+.md-typeset a:hover {
+  color: #0D5DD1;
+}
+
