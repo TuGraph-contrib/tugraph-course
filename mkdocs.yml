@@ -14,11 +14,11 @@ nav:
     - 项目介绍: minigu/introduction.md
     - 快速上手: minigu/quick-start.md
     - 设计文档: minigu/design.md
-    - Rust 语言基础: minigu/rust.md
+    - Rust语言基础: minigu/rust.md
     - 实验指南:
       - Lab 0 - 环境搭建: minigu/labs/lab0.md
-      - Lab 1 - 基础查询: minigu/labs/lab1.md
-      - Lab 2 - 高级特性: minigu/labs/lab2.md
+      - Lab 1 - 图存储实验: minigu/labs/lab1.md
+      - Lab 2 - 图查询实验: minigu/labs/lab2.md
     - 附录: minigu/appendix.md
   - TuGraph-DB:
     - 项目介绍: tugraph/introduction.md
