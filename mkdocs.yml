@@ -25,7 +25,7 @@ nav:
   - TuGraph-DB:
     - 项目介绍: tugraph/introduction.md
   - Graph+AI:
-    - 项目介绍： graphai/introduction.md
+    - 项目介绍: graphai/introduction.md
   - 关于: 
     - Roadmap: about/roadmap.md
     - 贡献指南: about/contributing.md
