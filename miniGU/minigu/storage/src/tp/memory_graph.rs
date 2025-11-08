@@ -91,11 +91,6 @@ impl VersionedVertex {
         &self.chain.current
     }
 
-    pub fn data(&self) -> Vertex {
-        let current = self.chain.current.read().unwrap();
-        current.data.clone()
-    }
-
     pub fn with_txn_id(initial: Vertex, txn_id: Timestamp) -> Self {
         debug_assert!(txn_id.raw() > Timestamp::TXN_ID_START);
         Self {
@@ -145,11 +140,6 @@ impl VersionedEdge {
 
     pub fn current(&self) -> &RwLock<CurrentVersion<Edge>> {
         &self.chain.current
-    }
-
-    pub fn data(&self) -> Edge {
-        let current = self.chain.current.read().unwrap();
-        current.data.clone()
     }
 
     pub fn with_modified_ts(initial: Edge, txn_id: Timestamp) -> Self {
