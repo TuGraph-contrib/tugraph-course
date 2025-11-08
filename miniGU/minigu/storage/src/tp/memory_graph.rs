@@ -15,7 +15,7 @@ use crate::common::wal::StorageWal;
 use crate::common::wal::graph_wal::{Operation, RedoEntry, WalManager, WalManagerConfig};
 use crate::common::{DeltaOp, SetPropsOp};
 use crate::error::{
-    EdgeNotFoundError, StorageError, StorageResult, VertexNotFoundError,
+    EdgeNotFoundError, StorageError, StorageResult, VertexNotFoundError,TransactionError,
 };
 
 // Perform the update properties operation
@@ -23,7 +23,7 @@ macro_rules! update_properties {
     ($self:expr, $id:expr, $entry:expr, $txn:expr, $indices:expr, $props:expr, $op:ident) => {{
         // Acquire the lock to modify the properties of the vertex/edge
         let mut current = $entry.chain.current.write().unwrap();
-
+        check_write_conflict(current.commit_ts, $txn)?;
         let delta_props = $indices
             .iter()
             .map(|i| current.data.properties.get(*i).unwrap().clone())
@@ -91,11 +91,6 @@ impl VersionedVertex {
         &self.chain.current
     }
 
-    pub fn data(&self) -> Vertex {
-        let current = self.chain.current.read().unwrap();
-        current.data.clone()
-    }
-
     pub fn with_txn_id(initial: Vertex, txn_id: Timestamp) -> Self {
         debug_assert!(txn_id.raw() > Timestamp::TXN_ID_START);
         Self {
@@ -110,6 +105,16 @@ impl VersionedVertex {
         }
     }
     // TODO:You need to improve this MVCC
+    pub fn get_visible(&self, txn: &MemTransaction) -> StorageResult<Vertex> {
+        Err(StorageError::Transaction(
+            TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
+        ))
+    }
+    // TODO:You need to improve this MVCC
+    // Returns whether the vertex is visible.
+    pub(super) fn is_visible(&self, txn: &MemTransaction) -> bool {
+        true
+    }
 }
 
 #[derive(Debug)]
@@ -137,11 +142,6 @@ impl VersionedEdge {
         &self.chain.current
     }
 
-    pub fn data(&self) -> Edge {
-        let current = self.chain.current.read().unwrap();
-        current.data.clone()
-    }
-
     pub fn with_modified_ts(initial: Edge, txn_id: Timestamp) -> Self {
         debug_assert!(txn_id.raw() > Timestamp::TXN_ID_START);
         Self {
@@ -155,6 +155,17 @@ impl VersionedEdge {
         }
     }
     // TODO:You need to improve this MVCC
+    pub fn get_visible(&self, _txn: &MemTransaction) -> StorageResult<Edge> {
+        Err(StorageError::Transaction(
+            TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
+        ))
+    }
+
+    // TODO:You need to improve this MVCC
+    // Returns whether the edge is visible.
+    pub fn is_visible(&self, txn: &MemTransaction) -> bool {
+        true
+    }
 }
 
 #[derive(Debug)]
@@ -486,7 +497,7 @@ impl MemoryGraph {
             .or_insert_with(|| VersionedVertex::with_txn_id(vertex.clone(), txn.txn_id()));
 
         let current = entry.chain.current.read().unwrap();
-
+        check_write_conflict(current.commit_ts, txn)?;
         // Record the vertex creation in the transaction
         let delta = DeltaOp::DelVertex(vid);
         let next_ptr = entry.chain.undo_ptr.read().unwrap().clone();
@@ -529,7 +540,7 @@ impl MemoryGraph {
             .or_insert_with(|| VersionedEdge::with_modified_ts(edge.clone(), txn.txn_id()));
 
         let current = entry.chain.current.read().unwrap();
-
+        check_write_conflict(current.commit_ts, txn)?;
         // Record the edge creation in the transaction
         let delta_edge = DeltaOp::DelEdge(eid);
         let undo_ptr = entry.chain.undo_ptr.read().unwrap().clone();
@@ -571,7 +582,7 @@ impl MemoryGraph {
         ))?;
 
         let mut current = entry.chain.current.write().unwrap();
-
+        check_write_conflict(current.commit_ts, txn)?;
         // Delete all edges associated with the vertex
         if let Some(adjacency_container) = self.adjacency_list.get(&vid) {
             for adj in adjacency_container.incoming().iter() {
@@ -619,7 +630,7 @@ impl MemoryGraph {
         ))?;
 
         let mut current = entry.chain.current.write().unwrap();
-
+        check_write_conflict(current.commit_ts, txn)?;
         // Record the edge deletion in the transaction
         let delta = DeltaOp::CreateEdge(current.data.clone());
         let undo_ptr = entry.chain.undo_ptr.read().unwrap().clone();
@@ -716,7 +727,6 @@ impl MemoryGraph {
     }
 }
 
-#[allow(dead_code)]
 #[inline]
 fn check_write_conflict(_commit_ts: Timestamp, _txn: &Arc<MemTransaction>) -> StorageResult<()> {
     // TODO:You need to understand read and write conflict of MVCC
