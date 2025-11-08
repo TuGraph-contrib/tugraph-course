@@ -104,14 +104,14 @@ impl VersionedVertex {
             }),
         }
     }
-    // TODO:You need to improve this MVCC
+    /// TODO(course): You need to implement this function
     pub fn get_visible(&self, txn: &MemTransaction) -> StorageResult<Vertex> {
         Err(StorageError::Transaction(
             TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
         ))
     }
-    // TODO:You need to improve this MVCC
-    // Returns whether the vertex is visible.
+    /// TODO(course): You need to implement this function
+    /// Returns whether the vertex is visible.
     pub(super) fn is_visible(&self, txn: &MemTransaction) -> bool {
         true
     }
@@ -154,15 +154,15 @@ impl VersionedEdge {
             }),
         }
     }
-    // TODO:You need to improve this MVCC
+    /// TODO(course): You need to implement this function
     pub fn get_visible(&self, _txn: &MemTransaction) -> StorageResult<Edge> {
         Err(StorageError::Transaction(
             TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
         ))
     }
 
-    // TODO:You need to improve this MVCC
-    // Returns whether the edge is visible.
+    /// TODO(course): You need to implement this function
+    /// Returns whether the edge is visible.
     pub fn is_visible(&self, txn: &MemTransaction) -> bool {
         true
     }
@@ -729,7 +729,7 @@ impl MemoryGraph {
 
 #[inline]
 fn check_write_conflict(_commit_ts: Timestamp, _txn: &Arc<MemTransaction>) -> StorageResult<()> {
-    // TODO:You need to understand read and write conflict of MVCC
+    /// TODO(course): You need to implement write conflict detection here
     Ok(())
 }
 
@@ -772,7 +772,6 @@ pub mod tests {
     pub fn mock_checkpoint_config() -> CheckpointManagerConfig {
         let temp_dir = temp_dir::TempDir::with_prefix("test_checkpoint_").unwrap();
         let dir = temp_dir.path().to_owned();
-        // TODO: Pass the temp dir to the caller so that it can be cleaned up.
         temp_dir.leak();
         CheckpointManagerConfig {
             checkpoint_dir: dir,
@@ -790,7 +789,6 @@ pub mod tests {
             .build()
             .unwrap();
         let path = temp_file.path().to_owned();
-        // TODO: Pass the temp file to the caller so that it can be cleaned up.
         temp_file.leak();
         WalManagerConfig { wal_path: path }
     }

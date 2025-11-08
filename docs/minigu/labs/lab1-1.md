@@ -16,13 +16,12 @@
 - WAL（Write Ahead Log）与检查点（Checkpoint）
 
 仓库已为本实验“挖空”了若干实现（用 TODO 标记），你需要补齐它们并通过现有测试。完成后，你将具备实现一个支持事务的图内存引擎的初步能力。
-与 MVCC 基础实现
 
 ---
 
 ## 0. 背景知识与设计原理
 
-本实验聚焦于 **面向OLTP场景的存储引擎**（`minigu/storage/src/tp/`），它为图数据提供**事务性内存存储**能力。
+本实验聚焦于 **面向OLTP场景的存储引擎**（`miniGU/minigu/storage/src/tp/`），它为图数据提供**事务性内存存储**能力。
 
 ### OLTP 图查询计算模式
 
@@ -289,75 +288,92 @@ Watermark = 活跃事务最小 start_ts；无活跃事务则为最新提交时�
 
 ---
  
-## 3. 需实现的接口列表
+## 3. 实验任务
 
-- `iterators/adjacency_iterator.rs`：实现 `Iterator for AdjacencyIterator::next()` 与 `load_next_batch()` 批处理逻辑，使相关测试（`test_adjacency_versioning`, `test_adj_iterator`, 以及涉及 adjacency 可见性统计的测试）通过。
-- `memory_graph.rs` 中 MVCC TODO：为 `VersionedVertex::with_txn_id` / `VersionedEdge::with_modified_ts` 对象的版本链完善后续扩展接口（若需要，可新增辅助方法保证可读性）。
-- `memory_graph.rs` 顶部的 `check_write_conflict`（当前空实现）——在属性更新等写操作前检测与其它事务的写冲突（可在 `set_vertex_property` / `set_edge_property` 调用之前插入）。
-
----
- 
-## 4. 实验任务分解与实现指导
+> 可以搜索 `TODO(course)` 快速定位需实现的接口（待实现代码位置）。
  
 ### 任务 1：实现邻接迭代器批处理
 
-文件：`iterators/adjacency_iterator.rs`，需求：
+文件：`iterators/adjacency_iterator.rs`，补齐 `Iterator for AdjacencyIterator::next()` 与 `load_next_batch()`。
 
-1. `next()` 能遍历全部邻居，并结合 `filters`。当当前批次耗尽自动加载下一批。
-2. `load_next_batch()` 将 `adj_list` 中剩余元素抓取至 `current_entries`，最多 `BATCH_SIZE` 个；重置 `current_index=0`；返回是否抓取成功。
-3. 需保持遍历有序（SkipSet 本身按键有序）；过滤后仍需正确推进。
-4. 记录当前条目于 `current_adj` 以支持上层接口 (`current_entry()`).
+当前文件中 `BATCH_SIZE=64`，需要实现批量抓取 + 过滤 + 版本可见性跳过逻辑，使以下测试通过：`test_adj_iterator`、`test_adjacency_versioning`、以及涉及删除后可见性统计的 GC 相关测试（如 `test_garbage_collection_after_delete_edge`）。
+
+> 可参考的实现逻辑
+> 
+> - **`next()`**：
+>   - 若 `current_index < current_entries.len()`，取当前项，递增 `current_index`；否则调用 `load_next_batch()`。
+>   - 应用全部 `filters`（`filters.iter().all(|f| f(&neighbor))`）。不满足则继续循环，直到找到或耗尽。
+>   - 对应边或顶点若已逻辑删除（通过查 edge 的 `VersionedEdge::is_visible` 或 vertex tombstone），需跳过。
+>   - 命中后更新 `current_adj` 并返回 `Ok(neighbor)`。
+> - **`load_next_batch()`**：
+>   - 从 SkipSet 迭代器继续抓取最多 `BATCH_SIZE` 条原始邻居（不做过滤）进入 `current_entries`。
+>   - 清空旧批次、重置 `current_index=0`。
+>   - 无剩余数据返回 `None`，否则返回 `Some(())`。
+> 
+> 提示：
+> 
+> - 有序性：不要复制 / 排序；直接按 SkipSet 迭代自然顺序分批。
+> - 可见性：GC 前 adjacency 中 tombstone 边仍存在，迭代器需跳过。可以在 `next()` 中对 `neighbor.eid()` 查询 `graph.edges.get(&eid)`，再检查其版本是否 tombstone 或不可见。
+> - 性能提示：过滤链较多时避免重复克隆，可优先通过引用访问；只有在确定返回前再克隆 `Neighbor`（当前结构 Copy 语义即可直接复制）。
 
  
-### 任务 2： MVCC 补全
+### 任务 2： MVCC 逻辑补全
 
-建议新增（示例，不强制）：
+文件：`memory_graph.rs`，补齐 可见性函数`get_visible` + 可见性函数`is_visible` + 写冲突检测`check_write_conflict`，具体包括
 
-```rust
-impl VersionedVertex { pub fn commit_ts(&self)->Timestamp { self.chain.current.read().unwrap().commit_ts } }
-impl VersionedEdge { pub fn commit_ts(&self)->Timestamp { ... } }
-```
- 
-并在读取/写入路径中调用统一的可见性判断函数，减少重复条件逻辑，便于未来扩展 Snapshot 隔离下的优化。
+- `VersionedVertex::get_visible(&self, txn)`
+- `VersionedVertex::is_visible(&self, txn)`
+- `VersionedEdge::get_visible(&self, txn)`
+- `VersionedEdge::is_visible(&self, txn)`
+- `MemoryGraph::check_write_conflict(&self, txn, id, is_vertex)`
 
-实现写冲突检测 `check_write_conflict`
 
-触发时机：在写操作（创建、删除、属性更新）前调用。
- 
-冲突判定示例：
-
-```text
-若目标实体 current.commit_ts 是其他活跃事务的 txn_id（未提交）且 != 当前事务 txn_id，则写冲突。
-若 current.commit_ts 为已提交时间戳且 > 当前事务 start_ts，表示该事务开始后被其他事务提交更新，也视为冲突（Serializable 下）。
-```
- 
-处理策略：返回 `StorageError::Transaction(TransactionError::WriteWriteConflict(...))` 或复用 `ReadWriteConflict`（自行在错误枚举中扩展更准确的名称是加分项）。
+> 可参考的实现逻辑
+>
+> 在 `get_visible` 中：
+> 
+> 1. 读 `current`；
+> 2. 若需回溯（条件同前），调用辅助函数；
+> 3. 检查 tombstone；返回对象或错误。
+> 
+> `is_visible`：只返回布尔：对象非 tombstone 且版本满足可见条件。
+> 
+> `check_write_conflict`：需要在所有写路径（创建点/边、删除点/边、属性更新）调用，用于保证 Serializable 隔离下的写写 / 读写冲突提前失败（现有代码已在这些路径中调用该函数占位）。
 
 ---
 
-## 5. 测试、验证与评估标准
+## 4. 测试与验证
 
 仓库已提供大量单元测试（主要在 `memory_graph.rs` / `transaction.rs` / `checkpoint.rs` 的 `#[cfg(test)]` 模块内，以及
-`storage/test/`目录下）。
+`miniGU/minigu/storage/tests/` 目录下的集成测试）。
 
 补齐实现后需全部通过测试，可以通过以下命令运行：
 
 ```bash
+# 运行全部测试（注意：某些套件失败时，后续套件可能不会继续运行）
 cargo test
-# 或通过以下命令
-cargo test -p minigu_storage --no-fail-fast
+
+# 建议：不因前序失败而提前退出
+cargo test --no-fail-fast
+
+# 仅运行 storage 包
+cargo test -p minigu-storage --no-fail-fast
+
+# 仅运行 storage 集成测试
+cargo test -p minigu-storage --test integration_tests -- --list
+cargo test -p minigu-storage --test integration_tests -- tp::tp_graph_test
 ```
 
-**若全部测试通过，则说明实现效果符合预期**
+> **若全部测试通过，则说明实现效果符合预期**。
 
 ---
 
-## 6. 提交与验收要求
+## 5. 提交与验收要求
 
 敬请期待
 
 ---
 
-## 7. FAQ
+## 6. FAQ
 
 敬请期待

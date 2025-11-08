@@ -30,9 +30,9 @@ pub struct AdjacencyIterator<'a> {
 impl Iterator for AdjacencyIterator<'_> {
     type Item = StorageResult<Neighbor>;
 
+    /// TODO(course): You need to implement this function
     /// Retrieves the next visible adjacency entry that satisfies all filters.
     fn next(&mut self) -> Option<Self::Item> {
-        // TODO：tp storage courge
         // Implement batch processing logic here
         // 1. Check if current_entries has unprocessed entries
         // 2. If yes, process the next entry, apply filters and visibility checks
@@ -43,8 +43,8 @@ impl Iterator for AdjacencyIterator<'_> {
 }
 
 impl<'a> AdjacencyIterator<'a> {
+    /// TODO(course): You need to implement this function
     fn load_next_batch(&mut self) -> Option<()> {
-        // TODO：tp storage courge
         // You need to implement the logic for batch loading
         // load BATCH_SIZE entries from adj_list into current_entries
         // reset current_index to 0
