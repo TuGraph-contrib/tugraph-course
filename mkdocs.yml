@@ -16,8 +16,10 @@ nav:
     - 设计文档: minigu/design.md
     - Rust语言基础: minigu/rust.md
     - 实验指南:
-      - Lab 0 - 环境搭建: minigu/labs/lab0.md
-      - Lab 1 - 图存储实验: minigu/labs/lab1.md
+      - Lab 0 - 实验准备: minigu/labs/lab0.md
+      - Lab 1 - 图存储实验:
+        - Lab 1-1 - OLTP图存储: minigu/labs/lab1-1.md
+        - Lab 1-2 - OLAP图存储: minigu/labs/lab1-2.md
       - Lab 2 - 图查询实验: minigu/labs/lab2.md
     - 附录: minigu/appendix.md
   - TuGraph-DB:
