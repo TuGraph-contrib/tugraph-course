@@ -27,19 +27,20 @@ impl Iterator for VertexIterator<'_> {
     fn next(&mut self) -> Option<Self::Item> {
         for entry in self.inner.by_ref() {
             let vid = *entry.key();
+            let versioned_vertex = entry.value();
 
-            let vertex = entry.value().data();
-
-            if vertex.is_tombstone() {
-                continue;
-            }
+            // Perform MVCC visibility check
+            let visible_vertex = match versioned_vertex.get_visible(self.txn) {
+                Ok(v) => v,
+                _ => continue,
+            };
 
             // Apply all filtering conditions
-            if self.filters.iter().all(|f| f(&vertex)) {
+            if self.filters.iter().all(|f| f(&visible_vertex)) {
                 // Record the vertex read in the transaction
                 self.txn.vertex_reads().insert(vid);
-                self.current_vertex = Some(vertex.clone());
-                return Some(Ok(vertex));
+                self.current_vertex = Some(visible_vertex.clone());
+                return Some(Ok(visible_vertex));
             }
         }
 

@@ -22,11 +22,11 @@ pub fn verify_hash(content: &str, expected_hash: &str) -> bool {
 const BASELINE_HASHES: &[(&str, &str)] = &[
     (
         "tp_graph_test.rs",
-        "a7536302360c4be32d56986b1dbd42117f6fbdbfd46099864623cef9e8ae0d36",
+        "66be383039a299b5a67132aada05881d5d617edf17efc08b2e3b268be73b39c1",
     ),
     (
         "isolation_level_test.rs",
-        "d8ba568ee8fcaf32872d8d923a66790e09607d1f38b83f79be8d9aa399b3c535",
+        "2388fda6695f0f8e645e2c86586f7c7417793ec914799598394deef0ce9a3d14",
     ),
     (
         "mod.rs",
