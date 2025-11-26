@@ -1,15 +1,28 @@
 # TuGraph 图计算课程
 
-欢迎来到 TuGraph 图计算技术课程系列！本课程由 [TuGraph](https://tugraph.tech) 团队联合多所高校共同打造，旨在为零基础的同学提供系统化的图计算技术相关技术的学习路径。
+欢迎来到 TuGraph 图计算技术课程系列!
+
+本课程由 [TuGraph](https://tugraph.tech) 团队联合多所高校共同打造，旨在为零基础的同学提供系统化的图计算技术相关技术的学习路径。
 
 ## 课程简介
 
-本课程包含多个图技术方面的内容：
+本课程包含多个图计算技术方面的内容：
 
 - MiniGU图数据库开发实战系列
+    - MiniGU 项目介绍与快速上手
+    - MiniGU 设计文档与 Rust 语言基础
+    - MiniGU 实验指南
+        - MiniGU Lab 0 - 环境搭建与入门
+        - MiniGU Lab 1 - 图存储引擎实现
 - TuGraph-DB图查询与图算法实验系列
+    - TuGraph-DB项目介绍
+    - 基于TuGraph的社区检测实验
+    - 基于TuGraph的链路预测实验
+    - 基于TuGraph的Cypher查询实践
 - Apache GeaFlow系列
-- Graph+AI技术系列
+    - GeaFlow 完整介绍
+- Graph+AI技术系列介绍
+    - Chat2Graph 图原生智能体系统介绍
 
 ## 课程内容
 
