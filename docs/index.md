@@ -1,19 +1,19 @@
-# TuGraph 图数据库课程
+# TuGraph 图计算课程
 
-欢迎来到 TuGraph 图数据库课程！本课程由 [TuGraph](https://tugraph.tech) 团队联合多所高校共同打造，旨在为零基础的同学提供系统化的图数据库与图计算技术学习路径。
+欢迎来到 TuGraph 图计算技术课程系列！本课程由 [TuGraph](https://tugraph.tech) 团队联合多所高校共同打造，旨在为零基础的同学提供系统化的图计算技术相关技术的学习路径。
 
 ## 课程简介
 
 本课程包含多个图技术方面的内容：
 
-- MiniGU图数据库实验系列
-- TuGraph-DB系列
+- MiniGU图数据库开发实战系列
+- TuGraph-DB图查询与图算法实验系列
 - Apache GeaFlow系列
 - Graph+AI技术系列
 
 ## 课程内容
 
-### MiniGU 图数据库实验系列
+### MiniGU 系列
 
 MiniGU 是一个使用 Rust 语言实现的轻量级嵌入式图数据库，专为图数据库入门学习设计。通过学习 MiniGU，你将掌握图数据库的核心概念与基本原理，学习使用 Rust 语言进行系统级开发、理解图数据存储，查询与计算的实现机制，通过动手实践深入了解图数据库的内部工作原理。
 
@@ -26,7 +26,7 @@ MiniGU 是一个使用 Rust 语言实现的轻量级嵌入式图数据库，专�
 
 ### TuGraph-DB 系列
 
-基于工业级图数据库 TuGraph 的实践课程，学习企业级图数据库的使用与应用开发。TuGraph 是由蚂蚁集团与清华大学联合研发的高性能图数据库，在金融风控、工业制造、智慧城市等领域有广泛应用。
+基于图数据库 TuGraph 的实践课程，学习企业级图数据库的使用。TuGraph 是由蚂蚁集团与清华大学联合研发的高性能图数据库，在金融风控、工业制造、智慧城市等领域有广泛应用。
 
 - **[TuGraph 完整介绍](tugraph/tugraph.md)** - 全面了解 TuGraph 的架构、特性与应用场景
 - 其他内容敬请期待
@@ -63,12 +63,12 @@ Apache GeaFlow 是蚂蚁集团开源的性能世界一流的 OLAP 图数据库�
 3. **理解原理**: 不仅要知道怎么用，更要理解背后的实现原理
 4. **善用工具**: 充分利用现代开发工具和 AI 编程助手，但要确保理解代码逻辑
 
-## 相关资源
+## 其他推荐资源
 
-- [TuGraph 官网](https://tugraph.tech)
-- [TuGraph GitHub](https://github.com/TuGraph-family/tugraph-db)
-- [课程仓库](https://github.com/TuGraph-contrib/tugraph-course)
+- 获取其他TuGraph社区相关资源：[TuGraph 官网](https://tugraph.tech)、[TuGraph GitHub](https://github.com/TuGraph-family/tugraph-db)
+- 优秀图技术课程资源推荐：北京大学《大规模图数据管理与分析》公开课程，可**微信公众号**和**B站**搜索关注“图谱学苑”获取视频资源
+- 优秀数据库开发技术资源推荐：[MiniOB](https://oceanbase.github.io/miniob/)数据库入门学习项目
 
 ---
 
-开始你的图数据库学习之旅吧！如有问题，欢迎在 GitHub 仓库提 Issue 讨论。
+开始你的图计算技术学习之旅吧！如有问题，欢迎在 GitHub 仓库提 Issue 讨论。

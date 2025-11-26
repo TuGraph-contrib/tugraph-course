@@ -13,7 +13,6 @@ nav:
   - MiniGU:
     - 项目介绍: minigu/introduction.md
     - 快速上手: minigu/quick-start.md
-    - 设计文档: minigu/design.md
     - Rust语言基础: minigu/rust.md
     - 实验指南:
       - Lab 0 - 实验准备: minigu/labs/lab0.md
@@ -24,6 +23,11 @@ nav:
     - 附录: minigu/appendix.md
   - TuGraph-DB:
     - TuGraph介绍: tugraph/tugraph.md
+    - 实验指南:
+      - Lab 0 - 实验准备: tugraph/labs/lab0.md
+      - Lab 1 - Louvain实验: tugraph/labs/lab1.md
+      - Lab 2 - Node2Vec实验: tugraph/labs/lab2.md
+      - Lab 3 - Cypher实践: tugraph/labs/lab3.md
   - Geaflow:
     - GeaFlow 完整介绍: geaflow/geaflow.md
   - Graph+AI:
@@ -94,3 +98,8 @@ markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
       block_tag: 'pre'
+
+extra_javascript:
+  - ./assets/mathjax.js
+  - https://polyfill.alicdn.com/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js

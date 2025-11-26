@@ -10,7 +10,7 @@ resolver = "3"
 [workspace.package]
 edition = "2024"
 license = "Apache-2.0"
-repository = "https://github.com/TuGraph-family/miniGU"
+repository = "https://github.com/TuGraph-contrib/tugraph-course"
 version = "0.1.0"
 
 [workspace.lints.clippy]
