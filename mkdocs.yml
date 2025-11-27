@@ -27,7 +27,7 @@ nav:
       - Lab 0 - 实验准备: tugraph/labs/lab0.md
       - Lab 1 - Louvain实验: tugraph/labs/lab1.md
       - Lab 2 - Node2Vec实验: tugraph/labs/lab2.md
-      - Lab 3 - Cypher实践: tugraph/labs/lab3.md
+      - 图查询Cypher实践: tugraph/labs/cypher.md
   - Geaflow:
     - GeaFlow 完整介绍: geaflow/geaflow.md
   - Graph+AI:

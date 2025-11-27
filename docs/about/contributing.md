@@ -87,9 +87,21 @@ git checkout -b feature/your-feature-name
 
 ## 🙏 致谢
 
-感谢所有为本项目做出贡献的开发者、文档编写者和问题报告者！你们的每一份贡献都让这个项目变得更好。以下是部分贡献者名单（按字母顺序排列）：
+感谢所有为本项目做出贡献的开发者、文档编写者和问题报告者！你们的每一份贡献都让这个项目变得更好。以下是部分贡献者名单：
 
-TODO: 添加贡献者名单
+<a href="https://github.com/TuGraph-family/miniGU/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=TuGraph-family/miniGU" />
+</a>
+
+和
+
+<a href="https://github.com/TuGraph-contrib/tugraph-course/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=TuGraph-contrib/tugraph-course" />
+</a>
+
+以及
+- 华中科技大学
+- 上海交通大学
 
 ---
 
