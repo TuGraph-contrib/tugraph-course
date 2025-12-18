@@ -119,8 +119,8 @@ impl ResultSet {
                 if chunk.is_unflat() {
                     // Only unflat chunks participate in Cartesian product
                     num_tuples *= chunk.cardinality() as u64;
+                    // Flat chunks are ignored - they don't contribute to tuple count
                 }
-                // Flat chunks are ignored - they don't contribute to tuple count
             }
         }
 

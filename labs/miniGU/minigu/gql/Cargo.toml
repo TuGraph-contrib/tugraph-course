@@ -1,0 +1,18 @@
+[package]
+name = "minigu-gql"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+minigu-common.workspace = true
+minigu-execution.workspace = true
+minigu-planner.workspace = true
+gql-parser.workspace = true
+
+[dev-dependencies]
+minigu.workspace = true

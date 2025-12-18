@@ -3,6 +3,10 @@ members = [
     "minigu/common",
     "minigu/storage",
     "minigu/transaction",
+    "minigu/catalog",
+    "minigu/context",
+    "minigu/core",
+    "minigu/gql",
 ]
 
 resolver = "3"
@@ -21,9 +25,16 @@ style = "warn"
 suspicious = "warn"
 
 [workspace.dependencies]
+minigu = { path = "minigu/core", version = "0.1.0" }
+minigu-catalog = { path = "minigu/catalog", version = "0.1.0" }
 minigu-common = { path = "minigu/common", version = "0.1.0" }
+minigu-context = { path = "minigu/context", version = "0.1.0" }
+minigu-execution = { path = "minigu/gql/src/execution", version = "0.1.0" }
+minigu-planner = { path = "minigu/gql/src/planner", version = "0.1.0" }
 minigu-storage = { path = "minigu/storage", version = "0.1.0" }
 minigu-transaction = { path = "minigu/transaction", version = "0.1.0" }
+gql-parser = { path = "minigu/gql/src/parser", version = "0.1.0", features = ["miette"] }
+downcast-rs = "1"
 
 anyhow = "1.0.98"
 approx = "0.5.1"

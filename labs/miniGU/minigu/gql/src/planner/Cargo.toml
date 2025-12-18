@@ -1,0 +1,20 @@
+[package]
+edition.workspace = true
+license.workspace = true
+name = "minigu-planner"
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+gql-parser = { workspace = true }
+itertools = { workspace = true }
+miette = { workspace = true }
+minigu-catalog = { workspace = true }
+minigu-common = { workspace = true }
+minigu-context = { workspace = true }
+serde = { workspace = true }
+smol_str = { workspace = true }
+thiserror = { workspace = true }
+
+[lints]
+workspace = true

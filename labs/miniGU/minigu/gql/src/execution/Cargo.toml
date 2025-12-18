@@ -1,0 +1,26 @@
+[package]
+edition.workspace = true
+license.workspace = true
+name = "minigu-execution"
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+arrow = { workspace = true }
+auto_impl = { workspace = true }
+itertools = { workspace = true }
+miette = { workspace = true }
+minigu-catalog = { workspace = true }
+minigu-common = { workspace = true }
+minigu-context = { workspace = true }
+minigu-planner = { workspace = true }
+minigu-storage = { workspace = true }
+minigu-transaction = { workspace = true }
+ordered-float = { workspace = true }
+rayon = { workspace = true }
+temp-dir = { workspace = true }
+temp-file = { workspace = true }
+thiserror = { workspace = true }
+
+[lints]
+workspace = true

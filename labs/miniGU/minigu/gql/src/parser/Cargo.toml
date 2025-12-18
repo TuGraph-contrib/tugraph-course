@@ -1,0 +1,32 @@
+[package]
+edition.workspace = true
+license.workspace = true
+name = "gql-parser"
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+itertools = { workspace = true }
+logos = { workspace = true }
+macro_rules_attribute = { workspace = true }
+miette = { workspace = true, optional = true }
+serde = { workspace = true, optional = true }
+smol_str = { workspace = true }
+thiserror = { workspace = true }
+winnow = { workspace = true }
+
+[features]
+default = ["std"]
+miette = ["std", "dep:miette"]
+serde = ["dep:serde", "smol_str/serde"]
+std = [
+    "logos/std",
+    "serde?/std",
+    "itertools/use_std",
+    "winnow/std",
+    "smol_str/std",
+    "thiserror/std",
+]
+
+[lints]
+workspace = true
