@@ -9,46 +9,6 @@ use crate::error::ExecutionResult;
 
 type AdjList = Arc<(Vec<VertexId>, Vec<String>)>;
 
-#[derive(Debug, Clone)]
-pub struct MockExpandSourceBuilder {
-    adj_lists: HashMap<VertexId, (Vec<VertexId>, Vec<String>)>,
-    max_array_size: usize,
-}
-
-impl MockExpandSourceBuilder {
-    pub fn new(max_array_size: usize) -> Self {
-        Self {
-            adj_lists: HashMap::new(),
-            max_array_size,
-        }
-    }
-
-    pub fn add_vertex(mut self, vertex: VertexId) -> Self {
-        self.adj_lists
-            .entry(vertex)
-            .or_insert_with(|| (vec![], vec![]));
-        self
-    }
-
-    pub fn add_edge(mut self, src: VertexId, dst: VertexId, prop: String) -> Self {
-        let (neighbors, props) = self.adj_lists.get_mut(&src).unwrap();
-        neighbors.push(dst);
-        props.push(prop);
-        self
-    }
-
-    pub fn build(self) -> MockExpandSource {
-        MockExpandSource {
-            adj_lists: self
-                .adj_lists
-                .into_iter()
-                .map(|(k, v)| (k, Arc::new(v)))
-                .collect(),
-            max_array_size: self.max_array_size,
-        }
-    }
-}
-
 /// A mock expand source that maps each vertex to its neighbors and the corresponding String-typed
 /// edge properties.
 ///
