@@ -130,8 +130,6 @@ impl LogicalPlanner {
         }
     }
 
-
-
     pub fn plan_result_statement(
         &self,
         statement: BoundResultStatement,

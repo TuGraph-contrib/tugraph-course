@@ -1,4 +1,4 @@
-﻿#[allow(unused_imports)]
+#[allow(unused_imports)]
 use std::sync::Arc;
 
 #[allow(unused_imports)]
@@ -102,7 +102,7 @@ where
                 let mut chunk = gen_try!(chunk);
 
                 // ============================================================
-                // LAB2 TODO: Implement Expand graph expansion logic    
+                // LAB2 TODO: Implement Expand graph expansion logic
                 // 请在下方实现:
                 // ============================================================
 
@@ -122,4 +122,3 @@ where
         .into_executor()
     }
 }
-

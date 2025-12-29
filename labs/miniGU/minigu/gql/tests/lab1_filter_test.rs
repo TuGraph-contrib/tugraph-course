@@ -49,7 +49,10 @@ fn test_basic_where_clause() {
 
     match result {
         Ok(res) => {
-            println!("Query executed successfully with {} chunks", res.chunks.len());
+            println!(
+                "Query executed successfully with {} chunks",
+                res.chunks.len()
+            );
         }
         Err(e) => {
             let error_msg = e.to_string();
@@ -77,12 +80,18 @@ fn test_equality_comparison() {
 
     match result {
         Ok(res) => {
-            println!("Equality filter test passed with {} chunks", res.chunks.len());
+            println!(
+                "Equality filter test passed with {} chunks",
+                res.chunks.len()
+            );
         }
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab1 incomplete: Equality filter not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab1 incomplete: Equality filter not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -105,7 +114,10 @@ fn test_and_condition() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab1 incomplete: AND condition filter not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab1 incomplete: AND condition filter not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -128,7 +140,10 @@ fn test_or_condition() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab1 incomplete: OR condition filter not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab1 incomplete: OR condition filter not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -145,7 +160,10 @@ fn test_no_where_no_filter() {
 
     let result = session.query("MATCH (n:PERSON) RETURN n");
 
-    assert!(result.is_ok(), "Query without WHERE clause should execute normally");
+    assert!(
+        result.is_ok(),
+        "Query without WHERE clause should execute normally"
+    );
 }
 
 /// Test 6: Verify filter result correctness
@@ -169,7 +187,10 @@ fn test_filter_result_correctness() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab1 incomplete: Filter node not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab1 incomplete: Filter node not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -194,7 +215,10 @@ fn test_filter_empty_result() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab1 incomplete: Filter node not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab1 incomplete: Filter node not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }

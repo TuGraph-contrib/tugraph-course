@@ -1,4 +1,4 @@
-﻿#[allow(unused_imports)]
+#[allow(unused_imports)]
 use itertools::Itertools;
 #[allow(unused_imports)]
 use minigu_common::data_chunk::DataChunk;
@@ -93,4 +93,3 @@ where
         .into_executor()
     }
 }
-

@@ -3,8 +3,8 @@ use std::sync::Arc;
 use arrow::array::{ArrayRef, AsArray};
 use minigu_common::data_chunk::DataChunk;
 
-use crate::executor::{Executor, IntoExecutor};
 use crate::executor::utils::gen_try;
+use crate::executor::{Executor, IntoExecutor};
 
 pub struct FlattenBuilder<C> {
     child: C,
@@ -32,10 +32,10 @@ impl<C: Executor> IntoExecutor for FlattenBuilder<C> {
 
             for chunk in child.into_iter() {
                 let chunk = gen_try!(chunk);
-                
+
                 // Simple implementation: just extract values from ListArray columns
                 let mut new_columns: Vec<ArrayRef> = Vec::new();
-                
+
                 for (idx, column) in chunk.columns().iter().enumerate() {
                     if column_indices.contains(&idx) {
                         // This is a ListArray column to flatten

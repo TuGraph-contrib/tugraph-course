@@ -14,7 +14,7 @@ type EdgeFilter<'a> = Box<dyn Fn(&Edge) -> bool + 'a>;
 /// An edge iterator that supports filtering.
 pub struct EdgeIterator<'a> {
     inner: Iter<'a, EdgeId, VersionedEdge>, // Native DashMap iterator
-    txn: &'a MemTransaction, // Reference to the transaction
+    txn: &'a MemTransaction,                // Reference to the transaction
     filters: Vec<EdgeFilter<'a>>,           // List of filtering predicates
     current_edge: Option<Edge>,             // Currently iterated edge
 }
@@ -27,7 +27,7 @@ impl Iterator for EdgeIterator<'_> {
         for entry in self.inner.by_ref() {
             let eid = *entry.key();
             let versioned_edge = entry.value();
-            
+
             // Perform MVCC visibility check
             let visible_edge = match versioned_edge.get_visible(self.txn) {
                 Ok(e) => e, // Skip logically deleted edges
