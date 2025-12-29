@@ -74,7 +74,6 @@ pub(super) struct VersionedVertex {
 
 impl VersionedVertex {
     /// Creates a new `VersionedVertex` instance with an initial vertex.
-    #[allow(dead_code)]
     pub fn new(initial: Vertex) -> Self {
         Self {
             chain: Arc::new(VersionChain {
@@ -125,7 +124,6 @@ pub(super) struct VersionedEdge {
 
 impl VersionedEdge {
     /// Creates a new `VersionedEdge` instance with an initial edge.
-    #[allow(dead_code)]
     pub fn new(initial: Edge) -> Self {
         Self {
             chain: Arc::new(VersionChain {

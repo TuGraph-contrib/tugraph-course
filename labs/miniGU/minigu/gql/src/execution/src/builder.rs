@@ -14,7 +14,6 @@ use minigu_planner::plan::{PlanData, PlanNode};
 use crate::evaluator::BoxedEvaluator;
 use crate::evaluator::column_ref::ColumnRef;
 use crate::evaluator::constant::Constant;
-use crate::evaluator::vector_distance::VectorDistanceEvaluator;
 use crate::evaluator::vertex_constructor::VertexConstructor;
 use crate::executor::procedure_call::ProcedureCallBuilder;
 use crate::executor::sort::SortSpec;
@@ -275,16 +274,6 @@ impl ExecutorBuilder {
                     .get_field_index_by_name(variable)
                     .expect("variable should be present in the schema");
                 Box::new(ColumnRef::new(index))
-            }
-            BoundExprKind::VectorDistance {
-                lhs,
-                rhs,
-                metric,
-                dimension,
-            } => {
-                let lhs = self.build_evaluator(lhs.as_ref(), schema);
-                let rhs = self.build_evaluator(rhs.as_ref(), schema);
-                Box::new(VectorDistanceEvaluator::new(lhs, rhs, *metric, *dimension))
             }
         }
     }

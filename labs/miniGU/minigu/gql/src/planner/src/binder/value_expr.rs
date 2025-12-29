@@ -3,13 +3,12 @@ use std::str::FromStr;
 use gql_parser::ast::{
     BinaryOp, BooleanLiteral, Expr, Function, Literal, NonNegativeInteger, StringLiteral,
     StringLiteralKind, UnaryOp, UnsignedInteger, UnsignedIntegerKind, UnsignedNumericLiteral,
-    Value, VectorDistance, VectorLiteral,
+    Value,
 };
 use minigu_common::constants::SESSION_USER;
 use minigu_common::data_type::LogicalType;
 use minigu_common::error::not_implemented;
-use minigu_common::types::VectorMetric;
-use minigu_common::value::{F32, F64, ScalarValue, VectorValue};
+use minigu_common::value::{F32, F64, ScalarValue};
 
 use super::Binder;
 use super::error::{BindError, BindResult};
@@ -47,48 +46,10 @@ impl Binder<'_> {
 
     fn bind_function_expression(&self, function: &Function) -> BindResult<BoundExpr> {
         match function {
-            Function::Vector(vector) => self.bind_vector_distance(vector),
             Function::Generic(_) => not_implemented("generic function expression", None),
             Function::Numeric(_) => not_implemented("numeric function expression", None),
             Function::Case(_) => not_implemented("case function expression", None),
         }
-    }
-
-    fn bind_vector_distance(&self, function: &VectorDistance) -> BindResult<BoundExpr> {
-        let lhs = self.bind_value_expression(function.lhs.as_ref().value())?;
-        let rhs = self.bind_value_expression(function.rhs.as_ref().value())?;
-
-        let lhs_dim = match &lhs.logical_type {
-            LogicalType::Vector(dim) => *dim,
-            ty => {
-                return Err(BindError::InvalidVectorDistanceArgument {
-                    position: 1,
-                    ty: ty.clone(),
-                });
-            }
-        };
-        let rhs_dim = match &rhs.logical_type {
-            LogicalType::Vector(dim) => *dim,
-            ty => {
-                return Err(BindError::InvalidVectorDistanceArgument {
-                    position: 2,
-                    ty: ty.clone(),
-                });
-            }
-        };
-        if lhs_dim != rhs_dim {
-            return Err(BindError::VectorDistanceDimensionMismatch {
-                left: lhs_dim,
-                right: rhs_dim,
-            });
-        }
-        let metric = if let Some(metric) = &function.metric {
-            VectorMetric::from_str(metric.value().as_str())?
-        } else {
-            VectorMetric::L2
-        };
-
-        Ok(BoundExpr::vector_distance(lhs, rhs, metric, lhs_dim))
     }
 
     pub fn bind_non_negative_integer(

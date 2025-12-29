@@ -69,10 +69,6 @@ impl LogicalPlanner {
                 self.plan_call_procedure_statement(statement)
             }
             BoundSimpleQueryStatement::Match(statement) => self.plan_match_statement(statement),
-
-            BoundSimpleQueryStatement::VectorIndexScan(_) => {
-                not_implemented("vector index scan", None)
-            }
         }
     }
 

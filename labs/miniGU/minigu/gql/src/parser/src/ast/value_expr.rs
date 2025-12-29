@@ -90,7 +90,6 @@ pub enum Function {
     Generic(GenericFunction),
     Numeric(NumericFunction),
     Case(CaseFunction),
-    Vector(VectorDistance),
 }
 
 #[apply(base)]
