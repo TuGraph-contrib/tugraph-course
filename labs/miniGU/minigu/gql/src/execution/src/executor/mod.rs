@@ -1,6 +1,5 @@
 ﻿pub mod aggregate;
 pub mod expand;
-pub mod factorized_filter;
 pub mod filter;
 pub mod flatten;
 pub mod offset;
@@ -19,9 +18,8 @@ pub mod vertex_scan;
 use std::fmt::Debug;
 
 use aggregate::{AggregateBuilder, AggregateSpec};
-use arrow::array::{BooleanArray, ListArray};
+use arrow::array::BooleanArray;
 use expand::ExpandBuilder;
-use factorized_filter::FactorizedFilterBuilder;
 use filter::FilterBuilder;
 use flatten::FlattenBuilder;
 use minigu_common::data_chunk::DataChunk;
@@ -75,14 +73,6 @@ pub trait Executor {
         P: FnMut(&DataChunk) -> ExecutionResult<BooleanArray>,
     {
         FilterBuilder::new(self, predicate).into_executor()
-    }
-
-    fn factorized_filter<P>(self, predicate: P, unflat_column_indices: Vec<usize>) -> impl Executor
-    where
-        Self: Sized,
-        P: FnMut(&DataChunk) -> ExecutionResult<ListArray>,
-    {
-        FactorizedFilterBuilder::new(self, predicate, unflat_column_indices).into_executor()
     }
 
     fn expand<S>(
@@ -178,35 +168,6 @@ pub trait Executor {
         Self: Sized,
     {
         OffsetBuilder::new(self, offset).into_executor()
-    }
-
-    /// Convert this Executor into a FactorizedExecutor.
-    ///
-    /// This method acts as a bridge between traditional DataChunk-based executors
-    /// and ResultSet-based factorized executors. Each row from the upstream DataChunk
-    /// is converted into an independent ResultSet.
-    ///
-    /// # Examples
-    /// Basic usage:
-    /// ```
-    /// # use minigu_execution::executor::{Executor, IntoExecutor};
-    /// # use minigu_execution::factorized_executor::FactorizedExecutor;
-    /// # use minigu_execution::error::ExecutionResult;
-    /// # use minigu_common::data_chunk::DataChunk;
-    /// fn convert_to_factorized<I>(some_chunk_iter: I) -> impl FactorizedExecutor
-    /// where
-    ///     I: Iterator<Item = ExecutionResult<DataChunk>>,
-    /// {
-    ///     some_chunk_iter.into_executor().factorized_transfer()
-    /// }
-    /// ```
-    fn factorized_transfer(self) -> impl crate::factorized_executor::FactorizedExecutor
-    where
-        Self: Sized,
-    {
-        use crate::factorized_executor::IntoFactorizedExecutor;
-        crate::factorized_executor::factorized_transfer::FactorizedTransferBuilder::new(self)
-            .into_factorized_executor()
     }
 }
 

@@ -2,7 +2,6 @@
 pub mod column_ref;
 pub mod constant;
 pub mod datum;
-pub mod factorized_evaluator;
 pub mod scalar_function;
 pub mod unary;
 pub mod vector_distance;

@@ -84,9 +84,6 @@ pub fn unsigned_literal(input: &mut TokenStream) -> ModalResult<Spanned<Literal>
         kind if kind.is_prefix_of_numeric_literal() => {
             unsigned_numeric_literal.map_inner(Literal::Numeric)
         },
-        TokenKind::Vector => {
-            vector_literal.map_inner(Literal::Vector)
-        },
         _ => fail,
     }
     .parse_next(input)
