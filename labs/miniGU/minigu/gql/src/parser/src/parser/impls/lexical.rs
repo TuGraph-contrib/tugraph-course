@@ -2,7 +2,6 @@ use winnow::combinator::{cut_err, dispatch, empty, fail, peek};
 use winnow::token::one_of;
 use winnow::{ModalResult, Parser};
 
-use super::value_expr::vector_literal;
 use crate::ast::{
     BooleanLiteral, Ident, Literal, StringLiteral, StringLiteralKind, UnsignedFloat,
     UnsignedInteger, UnsignedIntegerKind, UnsignedNumericLiteral,
@@ -83,9 +82,6 @@ pub fn unsigned_literal(input: &mut TokenStream) -> ModalResult<Spanned<Literal>
         },
         kind if kind.is_prefix_of_numeric_literal() => {
             unsigned_numeric_literal.map_inner(Literal::Numeric)
-        },
-        TokenKind::Vector => {
-            vector_literal.map_inner(Literal::Vector)
         },
         _ => fail,
     }
@@ -340,30 +336,6 @@ mod tests {
     #[test]
     fn test_substituted_parameter_reference_2() {
         let parsed = parse!(substituted_parameter_reference, "$$\"abc\"");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_literal_positive() {
-        let parsed = parse!(unsigned_literal, "VECTOR [1, 2, 3, 4]");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_literal_negative() {
-        let parsed = parse!(unsigned_literal, "VECTOR [-1.5, 2.0, -3.14]");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_literal_empty() {
-        let parsed = parse!(unsigned_literal, "VECTOR []");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_literal_mixed() {
-        let parsed = parse!(unsigned_literal, "VECTOR [1, -2, 3.14, -0.5]");
         assert_yaml_snapshot!(parsed);
     }
 }

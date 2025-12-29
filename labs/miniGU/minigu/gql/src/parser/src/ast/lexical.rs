@@ -18,7 +18,6 @@ pub enum Literal {
     Duration(DurationLiteral),
     List(ListConstructor),
     Record(RecordConstructor),
-    Vector(VectorLiteral),
     Null,
 }
 

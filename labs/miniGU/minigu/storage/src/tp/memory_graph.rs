@@ -3,7 +3,7 @@ use std::sync::{Arc, RwLock, Weak};
 use crossbeam_skiplist::SkipSet;
 use dashmap::DashMap;
 use minigu_common::types::{EdgeId, VertexId};
-use minigu_common::value::{ScalarValue};
+use minigu_common::value::ScalarValue;
 use minigu_transaction::{IsolationLevel, Timestamp, Transaction};
 
 use super::checkpoint::{CheckpointManager, CheckpointManagerConfig};
@@ -15,7 +15,7 @@ use crate::common::wal::StorageWal;
 use crate::common::wal::graph_wal::{Operation, RedoEntry, WalManager, WalManagerConfig};
 use crate::common::{DeltaOp, SetPropsOp};
 use crate::error::{
-    EdgeNotFoundError, StorageError, StorageResult, VertexNotFoundError,TransactionError,
+    EdgeNotFoundError, StorageError, StorageResult, TransactionError, VertexNotFoundError,
 };
 
 // Perform the update properties operation
@@ -74,7 +74,6 @@ pub(super) struct VersionedVertex {
 
 impl VersionedVertex {
     /// Creates a new `VersionedVertex` instance with an initial vertex.
-    #[allow(dead_code)]
     pub fn new(initial: Vertex) -> Self {
         Self {
             chain: Arc::new(VersionChain {
@@ -125,7 +124,6 @@ pub(super) struct VersionedEdge {
 
 impl VersionedEdge {
     /// Creates a new `VersionedEdge` instance with an initial edge.
-    #[allow(dead_code)]
     pub fn new(initial: Edge) -> Self {
         Self {
             chain: Arc::new(VersionChain {

@@ -1,11 +1,10 @@
-﻿pub mod aggregate;
+pub mod aggregate;
 pub mod expand;
 pub mod factorized_filter;
 pub mod filter;
 pub mod flatten;
 pub mod offset;
 pub mod procedure_call;
-
 
 // TODO: Implement limit executor.
 pub mod limit;

@@ -357,17 +357,6 @@ pub fn list_value_type_name(input: &mut TokenStream) -> ModalResult<Spanned<List
     .parse_next(input)
 }
 
-pub fn vector_literal(input: &mut TokenStream) -> ModalResult<Spanned<VectorLiteral>> {
-    seq! {VectorLiteral {
-        _: TokenKind::Vector,
-        _: TokenKind::LeftBracket,
-        elems: separated(0.., signed_numeric_literal_expression, TokenKind::Comma),
-        _: TokenKind::RightBracket,
-    }}
-    .spanned()
-    .parse_next(input)
-}
-
 pub fn path_value_constructor(input: &mut TokenStream) -> ModalResult<Spanned<PathConstructor>> {
     preceded(
         TokenKind::Path,
@@ -409,9 +398,6 @@ pub fn value_function(input: &mut TokenStream) -> ModalResult<Spanned<Function>>
         kind if kind.is_prefix_of_numeric_value_function() => {
             numeric_value_function.map_inner(Function::Numeric)
         },
-        TokenKind::VectorDistance => {
-            vector_distance_function.map_inner(Function::Vector)
-        },
         _ => fail
     }
     .parse_next(input)
@@ -437,20 +423,6 @@ pub fn numeric_value_function(input: &mut TokenStream) -> ModalResult<Spanned<Nu
         TokenKind::Abs => absolute_value_function,
         _ => fail
     }
-    .parse_next(input)
-}
-
-pub fn vector_distance_function(input: &mut TokenStream) -> ModalResult<Spanned<VectorDistance>> {
-    seq! {VectorDistance {
-        _: TokenKind::VectorDistance,
-        _: TokenKind::LeftParen,
-        lhs: value_expression.map(Box::new),
-        _: TokenKind::Comma,
-        rhs: value_expression.map(Box::new),
-        metric: opt(preceded(TokenKind::Comma, regular_identifier)),
-        _: TokenKind::RightParen,
-    }}
-    .spanned()
     .parse_next(input)
 }
 

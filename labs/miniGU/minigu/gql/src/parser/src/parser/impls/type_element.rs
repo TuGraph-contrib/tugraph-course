@@ -1018,22 +1018,4 @@ mod tests {
         let parsed = parse!(value_type, "decimal(5,2)");
         assert_yaml_snapshot!(parsed);
     }
-
-    #[test]
-    fn test_vector_type_1() {
-        let parsed = parse!(value_type, "vector(128)");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_type_2() {
-        let parsed = parse!(value_type, "vector(256) not null");
-        assert_yaml_snapshot!(parsed);
-    }
-
-    #[test]
-    fn test_vector_type_3() {
-        let parsed = parse!(value_type, "vector(4)");
-        assert_yaml_snapshot!(parsed);
-    }
 }

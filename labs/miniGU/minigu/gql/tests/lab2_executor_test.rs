@@ -123,7 +123,10 @@ fn test_project_multiple_columns() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab2 incomplete: Project operator not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab2 incomplete: Project operator not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -186,7 +189,10 @@ fn test_project_node() {
         Err(e) => {
             let error_msg = e.to_string();
             if error_msg.contains("todo") || error_msg.contains("not implemented") {
-                panic!("Lab2 incomplete: Project operator not implemented!\nError: {}", error_msg);
+                panic!(
+                    "Lab2 incomplete: Project operator not implemented!\nError: {}",
+                    error_msg
+                );
             }
             panic!("Query execution failed: {}", e);
         }
@@ -279,7 +285,10 @@ fn test_expand_both() {
             println!("  Schema: {:?}", res.schema());
 
             let total_rows: usize = res.chunks.iter().map(|c| c.cardinality()).sum();
-            println!("  Bidirectional expand successful, {} total rows", total_rows);
+            println!(
+                "  Bidirectional expand successful, {} total rows",
+                total_rows
+            );
         }
         Err(e) => {
             let error_msg = e.to_string();
@@ -310,7 +319,10 @@ fn test_expand_with_edge_type() {
             println!("  Schema: {:?}", res.schema());
 
             let total_rows: usize = res.chunks.iter().map(|c| c.cardinality()).sum();
-            println!("  Edge type filtered expand successful, {} total rows", total_rows);
+            println!(
+                "  Edge type filtered expand successful, {} total rows",
+                total_rows
+            );
         }
         Err(e) => {
             let error_msg = e.to_string();

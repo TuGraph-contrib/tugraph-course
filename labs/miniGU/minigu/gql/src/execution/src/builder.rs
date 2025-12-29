@@ -1,4 +1,4 @@
-﻿use std::sync::Arc;
+use std::sync::Arc;
 
 use arrow::array::{AsArray, Int32Array};
 use minigu_catalog::label_set::LabelSet;
@@ -14,7 +14,6 @@ use minigu_planner::plan::{PlanData, PlanNode};
 use crate::evaluator::BoxedEvaluator;
 use crate::evaluator::column_ref::ColumnRef;
 use crate::evaluator::constant::Constant;
-use crate::evaluator::vector_distance::VectorDistanceEvaluator;
 use crate::evaluator::vertex_constructor::VertexConstructor;
 use crate::executor::procedure_call::ProcedureCallBuilder;
 use crate::executor::sort::SortSpec;
@@ -113,68 +112,68 @@ impl ExecutorBuilder {
                 for expr in &project.exprs {
                     if let LogicalType::Vertex(_) = &expr.logical_type {
                         if let BoundExprKind::Variable(var_name) = &expr.kind {
-                        // Check child schema to see if this variable only has id (Int64)
-                        let child_field = child_schema
-                            .get_field_by_name(var_name)
-                            .expect("variable should be present in child schema");
-
-                        // If child schema only has id (Int64), need to add VertexPropertyScan
-                        if matches!(child_field.ty(), LogicalType::Int64) {
-                            let vid_index = child_schema
-                                .get_field_index_by_name(var_name)
+                            // Check child schema to see if this variable only has id (Int64)
+                            let child_field = child_schema
+                                .get_field_by_name(var_name)
                                 .expect("variable should be present in child schema");
 
-                            let container: Arc<GraphContainer> = self
-                                .session
-                                .current_graph
-                                .clone()
-                                .expect("current graph should be set")
-                                .object()
-                                .clone()
-                                .downcast_arc::<GraphContainer>()
-                                .expect("failed to downcast to GraphContainer");
+                            // If child schema only has id (Int64), need to add VertexPropertyScan
+                            if matches!(child_field.ty(), LogicalType::Int64) {
+                                let vid_index = child_schema
+                                    .get_field_index_by_name(var_name)
+                                    .expect("variable should be present in child schema");
 
-                            let mut property_names = Vec::new();
-                            let property_list = if let Some(label_specs) =
-                                output_schema.get_var_label(var_name.as_str())
-                            {
-                                let graph_type = container.graph_type();
-                                let mut property_ids = Vec::new();
-                                if let Some(first_label_set) = label_specs.first() {
-                                    if let Ok(Some(vertex_type)) = graph_type.get_vertex_type(
-                                        &LabelSet::from_iter(first_label_set.clone()),
-                                    ) {
-                                    for property in vertex_type.properties().iter() {
-                                        property_ids.push(property.0);
-                                        property_names.push(property.1.name().to_string());
+                                let container: Arc<GraphContainer> = self
+                                    .session
+                                    .current_graph
+                                    .clone()
+                                    .expect("current graph should be set")
+                                    .object()
+                                    .clone()
+                                    .downcast_arc::<GraphContainer>()
+                                    .expect("failed to downcast to GraphContainer");
+
+                                let mut property_names = Vec::new();
+                                let property_list = if let Some(label_specs) =
+                                    output_schema.get_var_label(var_name.as_str())
+                                {
+                                    let graph_type = container.graph_type();
+                                    let mut property_ids = Vec::new();
+                                    if let Some(first_label_set) = label_specs.first() {
+                                        if let Ok(Some(vertex_type)) = graph_type.get_vertex_type(
+                                            &LabelSet::from_iter(first_label_set.clone()),
+                                        ) {
+                                            for property in vertex_type.properties().iter() {
+                                                property_ids.push(property.0);
+                                                property_names.push(property.1.name().to_string());
+                                            }
+                                        }
                                     }
-                                }
-                                }
 
-                                property_ids
-                            } else {
-                                Vec::new()
-                            };
+                                    property_ids
+                                } else {
+                                    Vec::new()
+                                };
 
-                            child_executor = Box::new(child_executor.scan_vertex_property(
-                                vid_index,
-                                property_list.clone(),
-                                container,
-                            ));
-
-                            // Format: {var_name}_{prop_name} to handle cases where multiple
-                            // variables
-                            let mut new_fields = updated_schema.fields().to_vec();
-                            for prop_name in property_names.iter() {
-                                let qualified_name = format!("{}_{}", var_name, prop_name);
-                                new_fields.push(DataField::new(
-                                    qualified_name,
-                                    LogicalType::String,
-                                    true,
+                                child_executor = Box::new(child_executor.scan_vertex_property(
+                                    vid_index,
+                                    property_list.clone(),
+                                    container,
                                 ));
+
+                                // Format: {var_name}_{prop_name} to handle cases where multiple
+                                // variables
+                                let mut new_fields = updated_schema.fields().to_vec();
+                                for prop_name in property_names.iter() {
+                                    let qualified_name = format!("{}_{}", var_name, prop_name);
+                                    new_fields.push(DataField::new(
+                                        qualified_name,
+                                        LogicalType::String,
+                                        true,
+                                    ));
+                                }
+                                updated_schema = Arc::new(DataSchema::new(new_fields));
                             }
-                            updated_schema = Arc::new(DataSchema::new(new_fields));
-                        }
                         }
                     }
                 }
@@ -275,16 +274,6 @@ impl ExecutorBuilder {
                     .get_field_index_by_name(variable)
                     .expect("variable should be present in the schema");
                 Box::new(ColumnRef::new(index))
-            }
-            BoundExprKind::VectorDistance {
-                lhs,
-                rhs,
-                metric,
-                dimension,
-            } => {
-                let lhs = self.build_evaluator(lhs.as_ref(), schema);
-                let rhs = self.build_evaluator(rhs.as_ref(), schema);
-                Box::new(VectorDistanceEvaluator::new(lhs, rhs, *metric, *dimension))
             }
         }
     }

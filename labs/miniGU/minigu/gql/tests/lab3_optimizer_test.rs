@@ -131,7 +131,10 @@ fn test_partial_pushdown() {
         Ok(res) => {
             println!("Partial pushdown test:");
             let total_rows: usize = res.chunks.iter().map(|c| c.cardinality()).sum();
-            println!("  Partial pushdown query succeeded with {} rows", total_rows);
+            println!(
+                "  Partial pushdown query succeeded with {} rows",
+                total_rows
+            );
         }
         Err(e) => {
             let error_msg = e.to_string();
