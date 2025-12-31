@@ -1081,6 +1081,7 @@ dependencies = [
  "minigu-common",
  "minigu-execution",
  "minigu-planner",
+ "sha2",
 ]
 
 [[package]]

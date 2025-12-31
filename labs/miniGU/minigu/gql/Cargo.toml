@@ -16,3 +16,4 @@ gql-parser.workspace = true
 
 [dev-dependencies]
 minigu.workspace = true
+sha2 = "0.10"
