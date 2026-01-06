@@ -209,26 +209,25 @@ cargo test -p minigu-planner test_plan_match_with_filter
 
 ---
 
-## 4. 理解与思考
+## 4. 一些思考
 
-### 问题 1: 为什么 Filter 在 Match 之上?
+### 为什么 Filter 在 Match 之上?
 
-**答**: 计划树是自底向上执行的:
+计划树是自底向上执行的:
+
 1. Match 节点扫描图数据,产生候选结果
 2. Filter 节点过滤不满足条件的数据
 3. Project 节点投影需要的列
 
 这样的顺序符合数据流的自然方向。
 
-### 问题 2: Filter 节点何时转换为物理计划?
+### Filter 节点何时转换为物理计划?
 
-**答**: 在优化器 (Optimizer) 阶段,`LogicalFilter` 会被转换为 `PhysicalFilter`,并可能进行优化(如谓词下推,详见 Lab 2-3)。
+在优化器 (Optimizer) 阶段,`LogicalFilter` 会被转换为 `PhysicalFilter`,并可能进行优化(如谓词下推,详见 Lab 2-3)。
 
-### 问题 3: 如果有多个 WHERE 条件怎么办?
+### 如果有多个 WHERE 条件怎么办?
 
-**答**: 多个条件会在语义绑定阶段被组合成一个复合表达式 (如 `AND` / `OR`),传递给 Filter 节点的 predicate 是单个 `BoundExpression`,但其内部可能是复合表达式树。
-
----
+多个条件会在语义绑定阶段被组合成一个复合表达式 (如 `AND` / `OR`),传递给 Filter 节点的 predicate 是单个 `BoundExpression`,但其内部可能是复合表达式树。
 
 ---
 
@@ -242,16 +241,7 @@ cargo test -p minigu-planner test_plan_match_with_filter
 
 ---
 
-## 6. 参考资料
-
-- [GQL 规范 - Graph Pattern Matching](https://www.gqlstandards.org/)
-- [数据库查询优化基础](https://15445.courses.cs.cmu.edu/)
-
----
-
----
-
-## 7. FAQ
+## 6. FAQ
 
 **Q: 为什么注释写的是 LAB1 TODO?**
 

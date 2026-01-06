@@ -28,6 +28,7 @@ miniGU 采用 **迭代器模型 (Iterator Model)** / **火山模型 (Volcano Mod
 ```
 
 **优点**:
+
 - 流式处理,内存占用小
 - 代码结构清晰,易于组合
 - 支持 pipeline 执行
@@ -44,6 +45,7 @@ pub struct DataChunk {
 ```
 
 **关键操作**:
+
 - `chunk.columns()`: 获取所有列
 - `chunk.slice(offset, length)`: 切片
 - `chunk.compact()`: 应用 filter,移除被过滤的行
@@ -70,6 +72,7 @@ Expand 操作实现了图的邻接遍历:
 ```
 
 **关键点**:
+
 - 一个输入顶点可能产生多行输出 (1-to-N 扩展)
 - 需要过滤边标签和目标顶点标签
 - 需要处理方向 (出边/入边)
@@ -210,23 +213,19 @@ minigu> MATCH (n:Person) RETURN n.name, n.age + 1 AS next_age;
 
 ---
 
-## 5. 理解与思考
+## 5. 一些思考
 
-### 问题 1: 为什么 Expand 产生 ListArray 而不是展平?
+### 为什么 Expand 产生 ListArray 而不是展平?
 
-**答**: ListArray 保留了原始行的对应关系,便于后续操作 (如 UNNEST)。实际执行时,会有专门的 Unnest 算子将 ListArray 展平。
+ListArray 保留了原始行的对应关系,便于后续操作 (如 UNNEST)。实际执行时,会有专门的 Unnest 算子将 ListArray 展平。
 
-### 问题 2: Project 为什么要保留 filter?
+### 为什么 Project 要保留 filter?
+Filter 是延迟应用的 (lazy evaluation)。保留 filter 可以避免不必要的数据复制,只在真正需要时 (如 compact()) 才应用。
 
-**答**: Filter 是延迟应用的 (lazy evaluation)。保留 filter 可以避免不必要的数据复制,只在真正需要时 (如 compact()) 才应用。
+### 如何处理空结果?
 
-### 问题 3: 如何处理空结果?
-
-**答**: 
 - Expand: 如果顶点没有邻居,生成空的 ListArray (offsets 连续相等)
 - Project: 即使输入为空,也要生成对应 schema 的空 DataChunk
-
----
 
 ---
 
@@ -238,17 +237,7 @@ minigu> MATCH (n:Person) RETURN n.name, n.age + 1 AS next_age;
 
 ---
 
-## 7. 参考资料
-
-- [Apache Arrow 文档](https://arrow.apache.org/docs/)
-- [Volcano Iterator Model](https://paperhub.s3.amazonaws.com/dace52a42c07f7f8348b08dc2b186061.pdf)
-- miniGU 源码: `execution/src/executor/`
-
----
-
----
-
-## 8. FAQ
+## 7. FAQ
 
 **Q: gen move 是什么语法?**
 

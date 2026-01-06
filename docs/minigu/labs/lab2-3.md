@@ -23,6 +23,7 @@
 ```
 
 **优化目标**:
+
 - 减少数据扫描量
 - 减少中间结果大小
 - 选择高效的算法和数据结构
@@ -47,6 +48,7 @@ NodeScanById(n, id=1)  // 直接定位,只返回 1 个
 ```
 
 **性能提升**:
+
 - 减少 I/O: 只读取需要的数据
 - 减少内存: 中间结果更小
 - 减少 CPU: 避免无效计算
@@ -266,26 +268,23 @@ PhysicalNodeScanById(n, id=1)  ← 优化成功!
 
 ---
 
----
+## 4. 一些思考
 
-## 4. 理解与思考
+### 为什么不是所有 Filter 都能下推?
 
-### 问题 1: 为什么不是所有 Filter 都能下推?
-
-**答**: 
 - **依赖关系**: 如果 Filter 依赖 Join 的结果,必须在 Join 之后
 - **计算成本**: 有些复杂表达式在数据源层计算成本更高
 - **数据源能力**: 不是所有数据源都支持复杂过滤
 
-### 问题 2: 谓词下推会影响结果正确性吗?
+### 谓词下推会影响结果正确性吗?
 
-**答**: 不会。谓词下推是**等价变换**,只改变执行方式,不改变语义。优化器必须保证:
+不会。谓词下推是**等价变换**,只改变执行方式,不改变语义。优化器必须保证:
 - 结果集相同
 - 行顺序可能不同 (除非有 ORDER BY)
 
-### 问题 3: 如何处理多个 Filter?
+### 如何处理多个 Filter?
 
-**答**: 可以合并或分别下推:
+可以合并或分别下推:
 
 ```text
 Filter(n.age > 18)
@@ -300,29 +299,7 @@ NodeScan(n)
 
 ---
 
-## 5. 下一步
-
-完成 Lab 2-3 后,你已经掌握了:
-- ✅ Filter 逻辑计划生成 (Lab 2-1)
-- ✅ Expand/Project 执行器实现 (Lab 2-2)
-- ✅ 谓词下推优化 (Lab 2-3)
-
-**后续方向**:
-- **Lab 3**: Join 算法实现 (Hash Join, Merge Join)
-- **Lab 4**: 多跳遍历优化 (Variable-length Path)
-- **Lab 5**: 并行执行引擎
-
----
-
-## 6. 参考资料
-
-- [Query Optimization in Database Systems](https://15445.courses.cs.cmu.edu/fall2022/notes/14-optimization.pdf)
-- [Volcano Optimizer Generator](https://15721.courses.cs.cmu.edu/spring2020/papers/19-optimizer1/graefe-ieee1995.pdf)
-- [The Cascades Framework for Query Optimization](https://15721.courses.cs.cmu.edu/spring2018/papers/15-optimizer1/graefe-ieee1995.pdf)
-
----
-
-## 7. FAQ
+## 5. FAQ
 
 **Q: NodeScanById 需要自己实现吗?**
 
