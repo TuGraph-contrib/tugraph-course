@@ -102,7 +102,7 @@ where
                 let mut chunk = gen_try!(chunk);
 
                 // ============================================================
-                // LAB2 TODO: Implement Expand graph expansion logic
+                // LAB 2-2 TODO: Implement Expand graph expansion logic
                 // 请在下方实现:
                 // ============================================================
 
@@ -112,10 +112,10 @@ where
                 let _ = target_vertex_labels; // Remove this line
                 let _ = source; // remove this line
                 let _ = chunk; // remove this line
-                todo!("LAB2: Implement Expand graph expansion logic")
+                todo!("LAB 2-2: Implement Expand graph expansion logic")
 
                 // ============================================================
-                // END LAB2 TODO
+                // END LAB 2-2 TODO
                 // ============================================================
             }
         }

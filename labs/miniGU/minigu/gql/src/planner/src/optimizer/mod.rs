@@ -152,7 +152,7 @@ fn create_physical_plan_impl(logical_plan: &PlanNode) -> PlanResult<PlanNode> {
                 .expect("filter should have exactly one child");
 
             // ============================================================
-            // LAB3 TODO: Implement predicate pushdown optimization
+            // LAB 2-3 TODO: Implement predicate pushdown optimization
             // ============================================================
             //
             // Predicate pushdown is an important technology for database query optimization.
@@ -196,7 +196,7 @@ fn create_physical_plan_impl(logical_plan: &PlanNode) -> PlanResult<PlanNode> {
             // Otherwise, continue to use the default Filter processing
 
             // ============================================================
-            // END LAB3 TODO
+            // END LAB 2-3 TODO
             // ============================================================
 
             //Default behavior: Create PhysicalFilter (no optimization)

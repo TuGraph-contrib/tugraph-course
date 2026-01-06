@@ -143,7 +143,7 @@ pub fn plan_match_statement(&self, statement: BoundMatchStatement) -> PlanResult
             let mut plan = PlanNode::LogicalMatch(Arc::new(match_node));
 
             // ============================================================
-            // LAB1 TODO: Add Filter node support
+            // LAB 2-1 TODO: Add Filter node support
             // ============================================================
             //
             // 如果 binding.pattern 包含 predicate (WHERE 条件),需要:
@@ -157,7 +157,7 @@ pub fn plan_match_statement(&self, statement: BoundMatchStatement) -> PlanResult
             // YOUR CODE HERE
 
             // ============================================================
-            // END LAB1 TODO
+            // END LAB 2-1 TODO
             // ============================================================
 
             Ok(plan)
@@ -242,10 +242,6 @@ cargo test -p minigu-planner test_plan_match_with_filter
 ---
 
 ## 6. FAQ
-
-**Q: 为什么注释写的是 LAB1 TODO?**
-
-A: 这是代码中的历史标记,实际上这是 Lab 2-1 的任务内容。
 
 **Q: Filter::new() 的参数顺序是什么?**
 
