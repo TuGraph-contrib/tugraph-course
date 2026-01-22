@@ -1,0 +1,26 @@
+[package]
+edition.workspace = true
+license.workspace = true
+name = "minigu-cli"
+repository.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "minigu"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+gql-parser = { workspace = true }
+itertools = { workspace = true }
+lru = { workspace = true }
+miette = { workspace = true, features = ["fancy"] }
+minigu = { workspace = true }
+rustyline = { workspace = true }
+strum = { workspace = true }
+
+[dev-dependencies]
+insta-cmd = { workspace = true }
+
+[lints]
+workspace = true
