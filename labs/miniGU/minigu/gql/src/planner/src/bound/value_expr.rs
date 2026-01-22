@@ -8,6 +8,23 @@ use serde::Serialize;
 pub enum BoundExprKind {
     Value(ScalarValue),
     Variable(String),
+    Binary {
+        left: Box<BoundExpr>,
+        op: BoundBinaryOp,
+        right: Box<BoundExpr>,
+    },
+    Unary {
+        op: BoundUnaryOp,
+        expr: Box<BoundExpr>,
+    },
+    Property {
+        variable: String,
+        property: String,
+    },
+    Function {
+        name: String,
+        args: Vec<BoundExpr>,
+    },
 }
 
 impl Display for BoundExprKind {
@@ -16,6 +33,13 @@ impl Display for BoundExprKind {
             // TODO: Use `Display` rather than `Debug` representation for `value`.
             BoundExprKind::Value(value) => write!(f, "{value:?}"),
             BoundExprKind::Variable(variable) => write!(f, "{variable}"),
+            BoundExprKind::Binary { left, op, right } => write!(f, "({} {:?} {})", left, op, right),
+            BoundExprKind::Unary { op, expr } => write!(f, "({:?} {})", op, expr),
+            BoundExprKind::Property { variable, property } => write!(f, "{}.{}", variable, property),
+            BoundExprKind::Function { name, args } => {
+                let args_str: Vec<String> = args.iter().map(|a| a.to_string()).collect();
+                write!(f, "{}({})", name, args_str.join(", "))
+            }
         }
     }
 }

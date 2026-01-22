@@ -1,7 +1,8 @@
 use std::sync::Arc;
 
-use arrow::array::AsArray;
-use arrow::compute::kernels::{boolean, cmp, numeric};
+use arrow::array::{ArrayRef, AsArray};
+use arrow::compute::kernels::{boolean, cast, cmp, numeric};
+use arrow::datatypes::DataType;
 use minigu_common::data_chunk::DataChunk;
 
 use super::{DatumRef, Evaluator};
@@ -37,6 +38,104 @@ impl<L, R> Binary<L, R> {
     }
 }
 
+/// Coerce two arrays to compatible types for comparison and handle scalar broadcasting
+fn coerce_for_comparison(left: &ArrayRef, right: &ArrayRef) -> (ArrayRef, ArrayRef) {
+    // Handle length mismatch (scalar broadcasting)
+    let (left_broadcast, right_broadcast) = if left.len() != right.len() {
+        if left.len() == 1 && right.len() > 1 {
+            // Left is scalar, need to broadcast
+            let repeated = repeat_scalar(left, right.len());
+            (repeated, right.clone())
+        } else if right.len() == 1 && left.len() > 1 {
+            // Right is scalar, need to broadcast
+            let repeated = repeat_scalar(right, left.len());
+            (left.clone(), repeated)
+        } else {
+            (left.clone(), right.clone())
+        }
+    } else {
+        (left.clone(), right.clone())
+    };
+    
+    let left_type = left_broadcast.data_type();
+    let right_type = right_broadcast.data_type();
+    
+    if left_type == right_type {
+        return (left_broadcast, right_broadcast);
+    }
+    
+    // If both are integer types, cast to wider type
+    let target_type = get_wider_type(left_type, right_type);
+    
+    let left_cast = if left_type != &target_type {
+        cast::cast(&left_broadcast, &target_type).unwrap_or_else(|_| left_broadcast.clone())
+    } else {
+        left_broadcast
+    };
+    
+    let right_cast = if right_type != &target_type {
+        cast::cast(&right_broadcast, &target_type).unwrap_or_else(|_| right_broadcast.clone())
+    } else {
+        right_broadcast
+    };
+    
+    (left_cast, right_cast)
+}
+
+/// Repeat a scalar array n times
+fn repeat_scalar(scalar: &ArrayRef, n: usize) -> ArrayRef {
+    use arrow::array::*;
+    use arrow::datatypes::DataType;
+    
+    match scalar.data_type() {
+        DataType::Int8 => {
+            let arr = scalar.as_primitive::<arrow::datatypes::Int8Type>();
+            let val = arr.value(0);
+            Arc::new(Int8Array::from(vec![val; n]))
+        }
+        DataType::Int16 => {
+            let arr = scalar.as_primitive::<arrow::datatypes::Int16Type>();
+            let val = arr.value(0);
+            Arc::new(Int16Array::from(vec![val; n]))
+        }
+        DataType::Int32 => {
+            let arr = scalar.as_primitive::<arrow::datatypes::Int32Type>();
+            let val = arr.value(0);
+            Arc::new(Int32Array::from(vec![val; n]))
+        }
+        DataType::Int64 => {
+            let arr = scalar.as_primitive::<arrow::datatypes::Int64Type>();
+            let val = arr.value(0);
+            Arc::new(Int64Array::from(vec![val; n]))
+        }
+        DataType::Utf8 => {
+            let arr = scalar.as_string::<i32>();
+            let val = arr.value(0);
+            Arc::new(StringArray::from(vec![val; n]))
+        }
+        _ => scalar.clone(),
+    }
+}
+
+/// Get the wider numeric type
+fn get_wider_type(left: &DataType, right: &DataType) -> DataType {
+    use DataType::*;
+    match (left, right) {
+        // Integer type promotion
+        (Int8, Int16) | (Int16, Int8) => Int16,
+        (Int8, Int32) | (Int32, Int8) => Int32,
+        (Int8, Int64) | (Int64, Int8) => Int64,
+        (Int16, Int32) | (Int32, Int16) => Int32,
+        (Int16, Int64) | (Int64, Int16) => Int64,
+        (Int32, Int64) | (Int64, Int32) => Int64,
+        // Default to Int64
+        (Int8, _) | (_, Int8) => Int64,
+        (Int16, _) | (_, Int16) => Int64,
+        (Int32, _) | (_, Int32) => Int64,
+        _ => left.clone(),
+    }
+}
+
 impl<L: Evaluator, R: Evaluator> Evaluator for Binary<L, R> {
     fn evaluate(&self, chunk: &DataChunk) -> ExecutionResult<DatumRef> {
         let left = self.left.evaluate(chunk)?;
@@ -56,12 +155,19 @@ impl<L: Evaluator, R: Evaluator> Evaluator for Binary<L, R> {
                     _ => unreachable!(),
                 }
             }
-            BinaryOp::Eq => Arc::new(cmp::eq(&left, &right)?),
-            BinaryOp::Ne => Arc::new(cmp::neq(&left, &right)?),
-            BinaryOp::Gt => Arc::new(cmp::gt(&left, &right)?),
-            BinaryOp::Ge => Arc::new(cmp::gt_eq(&left, &right)?),
-            BinaryOp::Lt => Arc::new(cmp::lt(&left, &right)?),
-            BinaryOp::Le => Arc::new(cmp::lt_eq(&left, &right)?),
+            BinaryOp::Eq | BinaryOp::Ne | BinaryOp::Gt | BinaryOp::Ge | BinaryOp::Lt | BinaryOp::Le => {
+                // Perform type conversion for comparison operations
+                let (left_coerced, right_coerced) = coerce_for_comparison(left.as_array(), right.as_array());
+                match self.op {
+                    BinaryOp::Eq => Arc::new(cmp::eq(&left_coerced, &right_coerced)?),
+                    BinaryOp::Ne => Arc::new(cmp::neq(&left_coerced, &right_coerced)?),
+                    BinaryOp::Gt => Arc::new(cmp::gt(&left_coerced, &right_coerced)?),
+                    BinaryOp::Ge => Arc::new(cmp::gt_eq(&left_coerced, &right_coerced)?),
+                    BinaryOp::Lt => Arc::new(cmp::lt(&left_coerced, &right_coerced)?),
+                    BinaryOp::Le => Arc::new(cmp::lt_eq(&left_coerced, &right_coerced)?),
+                    _ => unreachable!(),
+                }
+            }
         };
         Ok(DatumRef::new(array, left.is_scalar() && right.is_scalar()))
     }

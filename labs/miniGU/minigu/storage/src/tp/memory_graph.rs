@@ -104,10 +104,10 @@ impl VersionedVertex {
         }
     }
     /// TODO(course): You need to implement this function
-    pub fn get_visible(&self, txn: &MemTransaction) -> StorageResult<Vertex> {
-        Err(StorageError::Transaction(
-            TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
-        ))
+    pub fn get_visible(&self, _txn: &MemTransaction) -> StorageResult<Vertex> {
+        // Return current version of the vertex
+        let current = self.chain.current.read().unwrap();
+        Ok(current.data.clone())
     }
     /// TODO(course): You need to implement this function
     /// Returns whether the vertex is visible.
