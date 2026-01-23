@@ -7,6 +7,7 @@ members = [
     "minigu/context",
     "minigu/core",
     "minigu/gql",
+    "minigu-cli",
 ]
 
 resolver = "3"
