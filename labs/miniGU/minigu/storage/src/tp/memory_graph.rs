@@ -104,10 +104,9 @@ impl VersionedVertex {
         }
     }
     /// TODO(course): You need to implement this function
-    pub fn get_visible(&self, txn: &MemTransaction) -> StorageResult<Vertex> {
-        Err(StorageError::Transaction(
-            TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
-        ))
+    pub fn get_visible(&self, _txn: &MemTransaction) -> StorageResult<Vertex> {
+        let current = self.chain.current.read().unwrap();
+        Ok(current.data.clone())
     }
     /// TODO(course): You need to implement this function
     /// Returns whether the vertex is visible.
@@ -154,9 +153,8 @@ impl VersionedEdge {
     }
     /// TODO(course): You need to implement this function
     pub fn get_visible(&self, _txn: &MemTransaction) -> StorageResult<Edge> {
-        Err(StorageError::Transaction(
-            TransactionError::VersionNotVisible("get_visible not implemented".to_string()),
-        ))
+        let current = self.chain.current.read().unwrap();
+        Ok(current.data.clone())
     }
 
     /// TODO(course): You need to implement this function
