@@ -4,13 +4,13 @@
 
 本教程将带你完整理解 miniGU 图数据库的查询处理流程，从查询语句到最终执行结果的全链路实现。
 
-Lab 2 分为三个递进的实验:
+Lab 2 分为三个递进的实验：
 
-- Lab 2-1：Filter 逻辑计划，在逻辑计划中添加 Filter 节点
-- Lab 2-2：Expand/Project 执行器，实现图遍历和投影计算
+- Lab 2-1：Expand/Project 执行器，实现图遍历和投影计算
+- Lab 2-2：Filter 逻辑计划，在逻辑计划中添加 Filter 节点
 - Lab 2-3：谓词下推优化，实现查询优化器
 
-**学习目标**:
+**学习目标**：
 
 - 理解查询处理的完整流程
 - 掌握逻辑计划与物理计划的区别
@@ -21,7 +21,7 @@ Lab 2 分为三个递进的实验:
 
 ## 1. 查询处理全流程
 
-让我们通过一个完整的例子理解查询处理流程:
+让我们通过一个完整的例子理解查询处理流程：
 
 ```gql
 MATCH (n:Person) 
@@ -168,64 +168,16 @@ trait Evaluator {
 
 ---
 
-## 3. Lab 2-1: Filter 逻辑计划实现
+## 3. Lab 2-1: Expand 与 Project 执行器实现
 
 ### 3.1 任务目标
 
-在 MATCH 语句包含 WHERE 子句时,生成 Filter 逻辑计划节点。
-
-**输入**:
-```gql
-MATCH (n:Person) WHERE n.age > 18 RETURN n
-```
-
-**输出** (逻辑计划):
-```text
-LogicalProject(n)
-    ↓
-LogicalFilter(n.age > 18)
-    ↓
-LogicalMatch(n:Person)
-```
-
-### 3.2 实现位置
-
-文件: `planner/src/logical_planner/query.rs`
-函数: `plan_match_statement`
-行数: 93-127
-
-### 3.3 实现要点
-
-```rust
-// 1. 检查是否有 WHERE 条件
-if let Some(predicate) = binding.pattern.predicate {
-    // 2. 创建 Filter 节点包装当前 plan
-    let filter = Filter::new(plan, predicate);
-    // 3. 更新 plan
-    plan = PlanNode::LogicalFilter(Arc::new(filter));
-}
-```
-
-### 3.4 测试验证
-
-```bash
-cargo test -p minigu-planner test_plan_match_with_filter
-```
-
-**详细文档**: [Lab 2-1 详细说明](./lab2-1.md)
-
----
-
-## 4. Lab 2-2: Expand 与 Project 执行器实现
-
-### 4.1 任务目标
-
 实现两个核心执行器:
 
-1. **Expand**: 图遍历,从顶点扩展到邻居
-2. **Project**: 投影计算,计算 RETURN 表达式
+1. **Expand**: 图遍历，从顶点扩展到邻居
+2. **Project**: 投影计算，计算 RETURN 表达式
 
-### 4.2 Expand 执行器
+### 3.2 Expand 执行器
 
 **功能**: 实现 `MATCH (a)-[r]->(b)` 中的边遍历
 
@@ -269,7 +221,7 @@ chunk = chunk.append_columns(vec![edge_list, target_list]);
 yield Ok(chunk);
 ```
 
-### 4.3 Project 执行器
+### 3.3 Project 执行器
 
 **功能**: 实现 `RETURN n.name, n.age + 1` 中的表达式计算
 
@@ -308,11 +260,59 @@ if let Some(filter) = chunk.filter() {
 yield Ok(new_chunk);
 ```
 
-### 4.4 测试验证
+### 3.4 测试验证
 
 ```bash
 cargo test -p minigu-execution test_expand_executor
 cargo test -p minigu-execution test_project_executor
+```
+
+**详细文档**: [Lab 2-1 详细说明](./lab2-1.md)
+
+---
+
+## 4. Lab 2-2: Filter 逻辑计划实现
+
+### 4.1 任务目标
+
+在 MATCH 语句包含 WHERE 子句时，生成 Filter 逻辑计划节点。
+
+**输入**:
+```gql
+MATCH (n:Person) WHERE n.age > 18 RETURN n
+```
+
+**输出** (逻辑计划):
+```text
+LogicalProject(n)
+    ↓
+LogicalFilter(n.age > 18)
+    ↓
+LogicalMatch(n:Person)
+```
+
+### 4.2 实现位置
+
+文件: `planner/src/logical_planner/query.rs`
+函数: `plan_match_statement`
+行数: 93-127
+
+### 4.3 实现要点
+
+```rust
+// 1. 检查是否有 WHERE 条件
+if let Some(predicate) = binding.pattern.predicate {
+    // 2. 创建 Filter 节点包装当前 plan
+    let filter = Filter::new(plan, predicate);
+    // 3. 更新 plan
+    plan = PlanNode::LogicalFilter(Arc::new(filter));
+}
+```
+
+### 4.4 测试验证
+
+```bash
+cargo test -p minigu-planner test_plan_match_with_filter
 ```
 
 **详细文档**: [Lab 2-2 详细说明](./lab2-2.md)
@@ -420,7 +420,7 @@ WHERE b.age > 18
 RETURN a.name, b.name, r.since
 ```
 
-### 6.2 逻辑计划 (Lab 2-1)
+### 6.2 逻辑计划 (Lab 2-2)
 
 ```text
 LogicalProject(a.name, b.name, r.since)
@@ -446,7 +446,7 @@ PhysicalExpand(r:KNOWS, b:Person)
 PhysicalNodeScanById(a, id=1)  ← 优化: 直接定位
 ```
 
-### 6.4 执行过程 (Lab 2-2)
+### 6.4 执行过程 (Lab 2-1)
 
 ```text
 1. NodeScanById 执行:

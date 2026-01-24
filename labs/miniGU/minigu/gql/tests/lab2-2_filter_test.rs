@@ -1,6 +1,6 @@
-//! Lab1: WHERE Clause Filter - LogicalFilter Node Tests
+//! Lab 2-2: Filter Logical Plan - LogicalFilter Node Tests
 //!
-//! This test file validates the implementation of Filter node generation.
+//! This test file validates the implementation of Filter node generation in logical plan.
 //!
 //! ## Learning Objectives
 //! - Understand how WHERE clauses are processed in GQL queries
@@ -9,7 +9,7 @@
 //!
 //! ## Run Tests
 //! ```bash
-//! cargo test --package minigu-test --test lab1_filter_test
+//! cargo test --package minigu-gql --test lab2-2_filter_test
 //! ```
 //!
 //! ## Related Files

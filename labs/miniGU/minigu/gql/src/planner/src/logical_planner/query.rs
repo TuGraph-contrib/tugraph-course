@@ -103,7 +103,7 @@ impl LogicalPlanner {
                 let mut plan = PlanNode::LogicalMatch(Arc::new(match_node));
 
                 // ============================================================
-                // LAB 2-1 TODO: Add Filter node support
+                // LAB 2-2 TODO: Add Filter node support
                 // ============================================================
                 //
                 // If binding.pattern contains predicate (WHERE condition), required:
@@ -117,7 +117,7 @@ impl LogicalPlanner {
                 // YOUR CODE HERE
 
                 // ============================================================
-                // END LAB 2-1 TODO
+                // END LAB 2-2 TODO
                 // ============================================================
 
                 Ok(plan)

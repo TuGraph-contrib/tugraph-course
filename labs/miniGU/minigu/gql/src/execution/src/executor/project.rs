@@ -60,7 +60,7 @@ where
                 let chunk = gen_try!(chunk);
 
                 // ============================================================
-                // LAB 2-2 TODO: Implement Project projection logic
+                // LAB 2-1 TODO: Implement Project projection logic
                 // ============================================================
                 //
                 // Steps:
@@ -83,10 +83,10 @@ where
                 // YOUR CODE HERE
                 let _ = evaluators; // Remove this line, just to get rid of the unused variable warning
                 let _ = chunk; // Remove this line, just to get rid of the unused variable warning
-                todo!("LAB 2-2: Implement Project projection logic")
+                todo!("LAB 2-1: Implement Project projection logic")
 
                 // ============================================================
-                // END LAB 2-2 TODO
+                // END LAB 2-1 TODO
                 // ============================================================
             }
         }

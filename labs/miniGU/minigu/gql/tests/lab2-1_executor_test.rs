@@ -1,20 +1,20 @@
-//! Lab2: Executor Implementation - Project and Expand Operator Tests
+//! Lab 2-1: Expand and Project Executor Implementation Tests
 //!
-//! This test file validates the implementation of Project and Expand executors.
+//! This test file validates the implementation of Expand and Project executors.
 //!
 //! ## Learning Objectives
 //! - Understand the Volcano Model execution pattern
-//! - Master Project operator for column projection
 //! - Master Expand operator for graph traversal
+//! - Master Project operator for column projection
 //!
 //! ## Run Tests
 //! ```bash
-//! cargo test --package minigu-test --test lab2_executor_test
+//! cargo test --package minigu-gql --test lab2-1_executor_test
 //! ```
 //!
 //! ## Related Files
-//! - `minigu/gql/execution/src/executor/project.rs` - Project operator
 //! - `minigu/gql/execution/src/executor/expand.rs` - Expand operator
+//! - `minigu/gql/execution/src/executor/project.rs` - Project operator
 
 use minigu::database::Database;
 
