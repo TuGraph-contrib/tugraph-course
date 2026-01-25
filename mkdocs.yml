@@ -21,8 +21,8 @@ nav:
         - Lab 1-2 - OLAP图存储: minigu/labs/lab1-2.md
       - Lab 2 - 图查询实验:
         - Lab 2-0 - 实验概览: minigu/labs/lab2-0.md
-        - Lab 2-1 - Filter逻辑计划: minigu/labs/lab2-1.md
-        - Lab 2-2 - Expand与Project执行器: minigu/labs/lab2-2.md
+        - Lab 2-1 - Expand与Project执行器: minigu/labs/lab2-1.md
+        - Lab 2-2 - Filter逻辑计划: minigu/labs/lab2-2.md
         - Lab 2-3 - 谓词下推优化: minigu/labs/lab2-3.md
     - 附录: minigu/appendix.md
   - TuGraph-DB:
