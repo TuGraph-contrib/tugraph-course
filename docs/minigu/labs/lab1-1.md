@@ -330,27 +330,9 @@ Watermark = 活跃事务最小 start_ts；无活跃事务则为最新提交时�
 > 在 `get_visible` 中：
 >
 > 1. 读 `current`；
-> 2. 若需回溯（条件同前），调用辅助函数 `MemTransaction::apply_deltas_for_read`；
+> 2. 若需回溯（条件同前），调用辅助函数 `MemTransaction::apply_deltas_for_read`，定义回调函数，根据 undo entry 的类型回溯数据；
 > 3. 检查 tombstone；返回对象或错误。
->
-> **`apply_deltas_for_read` 使用示例**（以顶点为例）：
->
-> ```rust
-> // 定义回调函数，根据 undo entry 的类型回溯数据
-> let apply_deltas = |undo_entry: &UndoEntry| match undo_entry.delta() {
->     DeltaOp::CreateVertex(original) => visible_vertex = original.clone(),
->     DeltaOp::SetVertexProps(_, SetPropsOp { indices, props }) => {
->         visible_vertex.set_props(indices, props.clone());
->     }
->     DeltaOp::DelVertex(_) => {
->         visible_vertex.is_tombstone = true;
->     }
->     _ => unreachable!("Unreachable delta op for a vertex"),
-> };
-> // 调用辅助函数，遍历 undo chain 直到找到对当前事务可见的版本
-> MemTransaction::apply_deltas_for_read(undo_ptr, apply_deltas, txn.start_ts());
-> ```
->
+> 
 > `is_visible`：只返回布尔：对象非 tombstone 且版本满足可见条件。
 >
 > `check_write_conflict`：需要在所有写路径（创建点/边、删除点/边、属性更新）调用，用于保证 Serializable 隔离下的写写 / 读写冲突提前失败（现有代码已在这些路径中调用该函数占位）。
