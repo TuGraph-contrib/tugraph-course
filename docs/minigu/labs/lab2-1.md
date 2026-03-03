@@ -210,18 +210,18 @@ pub trait Evaluator {
 
 ## 4. 测试验证
 
-### 单元测试
+### 集成测试
 
 ```bash
-# 运行 execution 相关测试
-cargo test -p minigu-execution --no-fail-fast
+# 运行 Lab 2-1 的集成测试
+cargo test -p minigu-gql --test lab2-1_executor_test
 
 # 运行特定测试
-cargo test -p minigu-execution test_expand_executor
-cargo test -p minigu-execution test_project_executor
+cargo test -p minigu-gql --test lab2-1_executor_test test_project_single_column
+cargo test -p minigu-gql --test lab2-1_executor_test test_expand_outgoing
 ```
 
-### 集成测试
+### 手动验证
 
 ```bash
 # 启动 miniGU
