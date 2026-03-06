@@ -230,14 +230,14 @@ PlanNode::LogicalFilter(filter) => {
 
 ## 3. 测试验证
 
-### 单元测试
+### 集成测试
 
 ```bash
-# 运行优化器测试
-cargo test -p minigu-planner test_optimizer --no-fail-fast
+# 运行 Lab 3 优化器测试
+cargo test -p minigu-gql --test lab3_optimizer_test
 
-# 运行谓词下推测试
-cargo test -p minigu-planner test_predicate_pushdown
+# 运行特定测试
+cargo test -p minigu-gql --test lab3_optimizer_test test_id_predicate_pushdown
 ```
 
 ### 手动验证

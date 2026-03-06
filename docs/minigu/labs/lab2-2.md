@@ -197,14 +197,14 @@ LogicalMatch
   pattern: (n:Person)
 ```
 
-### 单元测试
+### 集成测试
 
 ```bash
-# 运行 planner 相关测试
-cargo test -p minigu-planner --no-fail-fast
+# 运行 Lab 2-2 的集成测试
+cargo test -p minigu-gql --test lab2-2_filter_test
 
 # 运行特定测试
-cargo test -p minigu-planner test_plan_match_with_filter
+cargo test -p minigu-gql --test lab2-2_filter_test test_basic_where_clause
 ```
 
 ---
